@@ -1,15 +1,50 @@
 <html>
 <head>
 	<title> oO0OoO0OoO0OoO0OoO0OoO0OoO0OoO0OoO0OoO0OoO0Oo </title>
+	<style type="text/css">
+		body{
+			font-family: Menlo, 'Andale Mono', Monaco,  monospace;
+			line-height: 16px;
+			font-size: 10px;			
+		}
+		*{
+			font-size: 10px;			
+		}
+		ul{
+			padding:0 0 0 0.5em;
+			list-style-position: inside;
+			list-style-type: square;
+		}
+	</style>
 </head>
 <body>
+	
+	<h1>_o.js info</h1>
 
+	<h2>Version</h2>
+	_o.js v <span id="version-number"></span>
+	
+	<h2>Feature Support</h2>
+	<ul id="support"></ul>	
+
+	<div id="console">
+	</div>
+	
 	<script src="_o.js"></script>
 	<script type="text/javascript">		
+		// display the current version of _o.js
+		var E_versionNumber = document.getElementById( 'version-number' );
+		E_versionNumber.innerHTML = _o.VERSION;
 
-		var c1 = _o.createCanvas( 100, 100 );
-		var c2 = _o.createCanvas( 300, 200 );
+		//show results of feature detection
+		var E_supportList = document.getElementById( 'support' );
+		for ( var s in _o.browser ){
+			var E_li = document.createElement( 'li' );
+			E_li.innerHTML = s + ": " + _o.browser[s];
+			E_supportList.appendChild( E_li );
+		}
 
+		//end
 	</script>
 </body>
 </html>

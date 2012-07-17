@@ -26,7 +26,8 @@
 // SETUP
 
 	var _o = {
-		VERSION: '0.0.2'
+		VERSION: '0.0.3',
+		DEBUG : true
 	};
 
 	if( global._o ){
@@ -34,7 +35,7 @@
 	} else {
 		global._o = _o;
 	}
-// TEST FOR SUPPORT 
+// FEATURE DETECTION
 // This is pretty bare bones - for more, use Modernizr ( where some of this comes from... )
 _o.browser = {};
 
@@ -46,7 +47,64 @@ _o.browser.canvasSupport = (function(){
 _o.browser.webAudioSupport = (function(){
 	return ( typeof AudioContext === "function" ) ? true : ( typeof webkitAudioContext === "function" ) ? 'webkit' : false;
 })();
-console.log( _o.browser );
+
+_o.browser.touchSupport = (function() {
+    return !!(('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) ;     
+})();
+
+
+// DEBUGGER
+// show debug info in an element on the page - useful for mobile dev.
+
+
+_o.pageConsole = function( ele  ){	
+	var title = document.createElement('h1');
+	title.innerHTML = 'DEBUG HERE:'
+	_o.pageConsole.debugList = document.createElement('ul');
+	_o.pageConsole.debugList.style.listStyleType = 'none';
+	if( !ele ){
+		var ele = document.createElement('div');
+		document.body.appendChild( ele );
+	}
+	ele.appendChild( title );
+	ele.appendChild( _o.pageConsole.debugList );
+}
+
+_o.logRecurse = function( info , level ){
+	var toStr = Object.prototype.toString.call( info );
+	var output = '';
+	var this_level = 0;
+	if( level ){
+		this_level = level;	
+	}	
+	var next_level = this_level + 1;
+	if( toStr === '[object Array]' || toStr === '[object Object]' || toStr === '[object TouchEvent]' || toStr === '[object TouchList]' || toStr === '[object Touch]' ){		
+		output += '<br/>';
+		for( var i in info ){
+			for( var j = 0; j < this_level; j++ ){
+				output += "&nbsp;&nbsp;&nbsp;";
+			}
+			output += toStr + ' ->' + i + ' : ' + _o.logRecurse( info[i], next_level ) + '<br/>';
+		}
+	} else {
+		output = info;
+	}	
+	return output;	
+}
+
+_o.pageConsole.log = function( info ){
+	var li = document.createElement( 'li' );
+	li.innerHTML = _o.logRecurse( info );
+	_o.pageConsole.debugList.appendChild( li );
+}
+
+//if we're running debug mode, then show this console thing
+if( _o.DEBUG ){
+	_o.pageConsole();
+}
+
+//convenience
+_o.log = _o.pageConsole.log;
 
 
 // MOUSE INTERACTION	
@@ -152,6 +210,48 @@ console.log( _o.browser );
 		_o.keys.lastUp = name;	
 	}
 
+// TOUCH INTERACTION
+_o.touches = [];
+
+_o.touchStart = function( e ){
+	e.preventDefault();
+	var changedTouches = e.touches;
+	for( var i = 0; i < changedTouches.length; i++ ){
+		var id = changedTouches[i].identifier;
+		var touchEle = document.getElementById( 'touch-' + id );
+		if( !touchEle ){
+			var touchEle = document.createElement('div');
+			touchEle.id = 'touch-' + id;
+			touchEle.className = 'touchbox';
+			touchEle.style.position = 'absolute';
+			touchEle.style.background = '#FF0000';
+			touchEle.style.width = touchEle.style.height = 100;
+			document.body.appendChild( touchEle );
+		} 
+		touchEle.style.top = changedTouches[i].pageY - 50;
+		touchEle.style.left = changedTouches[i].pageX - 50;	
+	}
+}
+_o.touchEnd = function( e ){
+	e.preventDefault();
+	var changedTouches = e.changedTouches;
+	for( var i = 0; i < changedTouches.length; i++ ){
+		var id = changedTouches[i].identifier;
+		var touchEle = document.getElementById( 'touch-' + id);
+		document.body.removeChild( touchEle );
+	}
+}
+_o.trackTouch = function( e ){
+	e.preventDefault();
+	var touches = e.touches;
+	for( var i = 0; i < touches.length; i++ ){
+		var id = touches[i].identifier;
+		var touchEle = document.getElementById( 'touch-' + id );
+		touchEle.style.top = touches[i].pageY - 50;
+		touchEle.style.left = touches[i].pageX - 50;
+	}
+}
+
 
 // ADD LISTENERS
 // 
@@ -180,6 +280,18 @@ console.log( _o.browser );
 						{
 							'event': 'keyup',
 							'func' : _o.keyUp
+						},
+						{
+							'event': 'touchmove',
+							'func' : _o.trackTouch
+						},
+						{
+							'event': 'touchstart',
+							'func' : _o.touchStart
+						},
+						{
+							'event': 'touchend',
+							'func' : _o.touchEnd
 						}
 					];
 		for( var i = 0; i < events.length; i++ ){
