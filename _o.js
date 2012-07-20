@@ -27,7 +27,7 @@
 
 	var _o = {
 		VERSION: '0.0.3',
-		DEBUG : true
+		DEBUG : false
 	};
 
 	if( global._o ){
@@ -139,7 +139,6 @@ _o.log = _o.pageConsole.log;
 
 		//tracks mouse on a per canvas basis
 		_o.trackMouseOnCanvasses();
-
 	};
 
 	// MOUSE BUTTONS
@@ -150,16 +149,15 @@ _o.log = _o.pageConsole.log;
 		_o.pMouse.down = _o.mouse.down;
 		_o.mouse.down = true;
 	}
-	_o.mouseUp = function(){
+	_o.mouseUp = function(e){	
 		_o.pMouse.down = _o.mouse.down;
 		_o.mouse.down = false;
 	}
 
-
-
-
 // KEYBOARD INTERACTION
-	
+//
+// map of keys by code and by name - done to a Mac keyboard	
+// TODO: check against other keyboards & layouts
 	_o.keys = {};
 
     _o.keys.listByCode = {
