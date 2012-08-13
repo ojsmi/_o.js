@@ -209,44 +209,58 @@ _o.log = _o.pageConsole.log;
 	}
 
 // TOUCH INTERACTION
-_o.touches = [];
+// store touches as an object literal, indexed by ID.
+// each has a touch and pTouch object - to mirror _o.mouse & _o.pMouse
+// each of these has an x and y, and a target element
 
-_o.touchStart = function( e ){
+// TODO: 
+// - remove target element - this is a requirement of a specific 
+//   use case & should be made more general
+// - store in an array for ease of access?
+
+_o.touches = {};
+
+_o.trackTouch = function( e ){
 	e.preventDefault();
-	var changedTouches = e.touches;
-	for( var i = 0; i < changedTouches.length; i++ ){
-		var id = changedTouches[i].identifier;
-		var touchEle = document.getElementById( 'touch-' + id );
-		if( !touchEle ){
-			var touchEle = document.createElement('div');
-			touchEle.id = 'touch-' + id;
-			touchEle.className = 'touchbox';
-			touchEle.style.position = 'absolute';
-			touchEle.style.background = '#FF0000';
-			touchEle.style.width = touchEle.style.height = 100;
-			document.body.appendChild( touchEle );
-		} 
-		touchEle.style.top = changedTouches[i].pageY - 50;
-		touchEle.style.left = changedTouches[i].pageX - 50;	
+
+	for( var i = 0; i < e.touches.length; i++ ){
+		var newTouch = e.touches[i];
+		var id = newTouch.identifier;
+		var pTouch;		
+		if( _o.touches[id] ){
+			_o.touches[id].pTouch.x = _o.touches[id].touch.x;
+			_o.touches[id].pTouch.y = _o.touches[id].touch.y;
+			_o.touches[id].pTouch.target = _o.touches[id].touch.target;
+			_o.touches[id].touch.x = newTouch.pageX;
+			_o.touches[id].touch.y = newTouch.pageY;
+			_o.touches[id].touch.target = newTouch.target;
+		} else {
+			_o.touches[id] = {};
+			_o.touches[id].pTouch = {};
+			_o.touches[id].touch = {};
+
+			_o.touches[id].pTouch.x = newTouch.pageX;
+			_o.touches[id].pTouch.y = newTouch.pageY;
+			_o.touches[id].pTouch.target = newTouch.target;
+			_o.touches[id].touch.x = newTouch.pageX;
+			_o.touches[id].touch.y = newTouch.pageY;
+			_o.touches[id].touch.target = newTouch.target;			
+		}
+
 	}
 }
+
 _o.touchEnd = function( e ){
 	e.preventDefault();
 	var changedTouches = e.changedTouches;
+
 	for( var i = 0; i < changedTouches.length; i++ ){
-		var id = changedTouches[i].identifier;
-		var touchEle = document.getElementById( 'touch-' + id);
-		document.body.removeChild( touchEle );
-	}
-}
-_o.trackTouch = function( e ){
-	e.preventDefault();
-	var touches = e.touches;
-	for( var i = 0; i < touches.length; i++ ){
-		var id = touches[i].identifier;
-		var touchEle = document.getElementById( 'touch-' + id );
-		touchEle.style.top = touches[i].pageY - 50;
-		touchEle.style.left = touches[i].pageX - 50;
+		var id = changedTouches[i].identifier;		
+		for( var touchId in _o.touches){						
+			if( touchId == id ){		
+				delete _o.touches[id];	
+			}
+		}		
 	}
 }
 
@@ -285,7 +299,7 @@ _o.trackTouch = function( e ){
 						},
 						{
 							'event': 'touchstart',
-							'func' : _o.touchStart
+							'func' : _o.trackTouch
 						},
 						{
 							'event': 'touchend',
