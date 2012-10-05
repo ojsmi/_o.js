@@ -385,6 +385,18 @@ _o.touchEnd = function( e ){
 		}
 	}
 
+	// A FRAME RATE/DRAWER
+	// 
+	// overwrite _o.draw to have our code executed every frame	
+	_o.loop = function(){
+		
+		if( typeof _o.draw === 'function' ){
+			_o.draw();
+		}
+
+		requestAnimationFrame( _o.loop );
+	}
+
 	// CREATE AUDIO
 	//
 	// creates and returns an audio context
