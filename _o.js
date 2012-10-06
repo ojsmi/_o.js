@@ -26,7 +26,7 @@
 // SETUP
 
 	var _o = {
-		VERSION: '0.0.3',
+		VERSION: '0.0.5',
 		DEBUG : false
 	};
 
@@ -395,6 +395,53 @@ _o.touchEnd = function( e ){
 		}
 
 		requestAnimationFrame( _o.loop );
+	}
+
+	//IMAGE LOADER
+	//
+	//preloads images
+	//takes array of image sources
+	//returns array of objects containing the image src and the image 
+	_o.loadImages = function( sources, callback ){	
+		var loadCount = 0;
+		var loadAim = sources.length;
+		var images = []; 			
+		if( loadAim > 0 ){
+			for( var i = 0; i < loadAim; i++ ){		
+				//construct the object we will return
+				images[i] = {
+					src : sources[i],
+					image : new Image()
+				};	
+				//actions to fire when this image is loaded
+				images[i].image.onload = function(){										
+					loadCount++;					
+					if( loadCount === loadAim && typeof callback === 'function' ){
+						//all loaded, fire the callback - pass it our images
+						callback( images );
+					}
+				}
+				//load the image
+				images[i].image.src = images[i].src;
+			}
+		}
+	}
+
+	//PIXEL DATA LOADER
+	//
+	//creates a temporary canvas,
+	//draws image to it
+	//loads image pixel data from there and returns it.
+	_o.loadPixels = function( image ){
+		//setup a temp canvas
+		this.tempC = document.createElement( 'canvas' );
+		this.tempC.width = image.width;
+		this.tempC.height = image.height;	
+		this.tempCtx = this.tempC.getContext( '2d' );
+		//draw image to this
+		this.tempCtx.drawImage( image, 0, 0 , image.width, image.height );
+		//get the pixels & return
+		return this.tempCtx.getImageData( 0, 0, image.width, image.height );
 	}
 
 	// CREATE AUDIO
