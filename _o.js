@@ -26,7 +26,7 @@
 // SETUP
 
 	var _o = {
-		VERSION: '0.0.5',
+		VERSION: '0.0.6',
 		DEBUG : false
 	};
 
@@ -267,7 +267,7 @@ _o.touchEnd = function( e ){
 
 // ADD LISTENERS
 // 
-// add the listeners for mouse ad keyboard to the document
+// add the listeners for mouse and keyboard to the document
 // this relies on addEventListener, so it precludes older browsers, but they tend
 // not to have canvas support and almost certainly don't have audio support, so
 // they're out of the scope of this library
@@ -460,6 +460,55 @@ _o.touchEnd = function( e ){
 
 		return audio;
 	};
+
+	// SOUND LOADER
+	//
+	// preloads audio
+	// takes sound source & callback
+	// optional: arrayPosition to allow _o.loadSounds to retain array order of loaded sounds
+	// returns object containing the sound src and an arraybuffer containing the sound 
+	_o.loadSound = function( source, callback, arrayPosition ){
+		var sound = { 
+				src: source,
+				arraybuffer: null 
+			};
+		var request = new XMLHttpRequest();
+		request.open("GET", source, true );
+		request.responseType = "arraybuffer";				
+		request.onload = function( data ){											
+			sound.arraybuffer = request.response;
+			if( typeof callback === 'function' ){								
+				callback( sound , arrayPosition);
+			}
+		}
+		request.send();		
+	}
+
+	// MULTIPLE SOUND LOADER
+	//
+	// loads multiple pieces of audio
+	// takes array of sound sources
+	// returns array of objects containing source & array buffer
+	//
+	// relies on _o.loadSound
+	// sends _o.loadSound the optional parameter arrayPosition so that the 
+	// resultant array is the same order as the one passed in.
+	_o.loadSounds = function( sources, callback ){	
+		var loadCount = 0;
+		var loadAim = sources.length;
+		var sounds = []; 		
+		if( loadAim > 0 ){
+			for( var i = 0; i < loadAim; i++ ){					
+				_o.loadSound( sources[i], function( sound, arrayPosition ){			
+					loadCount++;
+					sounds[arrayPosition] = sound;
+					if( loadCount === loadAim && typeof callback === 'function' ){
+						callback( sounds );
+					}
+				}, i );
+			}
+		}
+	}
 
 // SHIVS/SHIMS
 
