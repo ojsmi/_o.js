@@ -565,48 +565,7 @@ _o.touchEnd = function( e ){
 		} else if( _o.browser.getUserMediaSupport === "webkit" ){
 			navigator.webkitGetUserMedia( { audio: true }, success, failure );
 		}
-
-	}
-	if (typeof navigator.webkitGetUserMedia == 'function') {
-			//create web audio api		
-			if ( typeof webkitAudioContext == "function" ) {
-				var audioContext;
-				var micSource;
-				var micAnalysis;
-				var volume = 0;
-		        navigator.webkitGetUserMedia(
-		        	{audio: true}, 
-		            function( stream ) {		            	
-		            	audioContext = new webkitAudioContext();
-		            	
-		            	//create our source node from mic stream
-		            	micSource = audioContext.createMediaStreamSource( stream );
-		            	micAnalysis = audioContext.createAnalyser();	
-		            	micAnalysis.fftSize = 1024;	            	
-		            	micSource.connect( micAnalysis );		            	
-		            	
-		            	//micAnalysis.connect( audioContext.destination );
-		            	
-		            	window.setInterval(function(){
-		            		var data = new Uint8Array(micAnalysis.fftSize);
-  							micAnalysis.getByteFrequencyData(data);	
-  							var total = 0;
-  							for( var i = 0; i < data.length; i++ ){
-  								total += data[i];
-  							}	
-  							volume = total / data.length;
-
-		            	},100);
-		            },
-		            function(error) {
-		                // User denied or an error occurred
-		               console.log( 'failure' );
-		            }
-		        );
-		    }
-	    } else {
-	    	console.log( 'not supported' );
-	    }
+	}	
 
 // SHIVS/SHIMS
 
