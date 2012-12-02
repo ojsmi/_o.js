@@ -49,7 +49,11 @@ _o.browser.webAudioSupport = (function(){
 })();
 
 _o.browser.touchSupport = (function() {
-    return !!(('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) ;     
+    return !!(('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) ;
+})();
+
+_o.browser.getUserMediaSupport = (function() {
+    return ( typeof GetUserMedia === "function" ) ? true : ( typeof webkitGetUserMedia === "function" ) ? 'webkit' : false;
 })();
 
 
@@ -57,9 +61,9 @@ _o.browser.touchSupport = (function() {
 // show debug info in an element on the page - useful for mobile dev.
 
 
-_o.pageConsole = function( ele  ){	
+_o.pageConsole = function( ele  ){
 	var title = document.createElement('h1');
-	title.innerHTML = 'DEBUG HERE:'
+	title.innerHTML = 'DEBUG HERE:';
 	_o.pageConsole.debugList = document.createElement('ul');
 	_o.pageConsole.debugList.style.listStyleType = 'none';
 	if( !ele ){
@@ -68,17 +72,17 @@ _o.pageConsole = function( ele  ){
 	}
 	ele.appendChild( title );
 	ele.appendChild( _o.pageConsole.debugList );
-}
+};
 
 _o.logRecurse = function( info , level ){
 	var toStr = Object.prototype.toString.call( info );
 	var output = '';
 	var this_level = 0;
 	if( level ){
-		this_level = level;	
-	}	
+		this_level = level;
+	}
 	var next_level = this_level + 1;
-	if( toStr === '[object Array]' || toStr === '[object Object]' || toStr === '[object TouchEvent]' || toStr === '[object TouchList]' || toStr === '[object Touch]' ){		
+	if( toStr === '[object Array]' || toStr === '[object Object]' || toStr === '[object TouchEvent]' || toStr === '[object TouchList]' || toStr === '[object Touch]' ){
 		output += '<br/>';
 		for( var i in info ){
 			for( var j = 0; j < this_level; j++ ){
@@ -88,15 +92,15 @@ _o.logRecurse = function( info , level ){
 		}
 	} else {
 		output = info;
-	}	
-	return output;	
-}
+	}
+	return output;
+};
 
 _o.pageConsole.log = function( info ){
 	var li = document.createElement( 'li' );
 	li.innerHTML = _o.logRecurse( info );
 	_o.pageConsole.debugList.appendChild( li );
-}
+};
 
 //if we're running debug mode, then show this console thing
 if( _o.DEBUG ){
@@ -106,10 +110,53 @@ if( _o.DEBUG ){
 //convenience
 _o.log = _o.pageConsole.log;
 
+// UTILS
 
-// MOUSE INTERACTION	
-// 
-// we keep this info about the mouse: 
+	// MAP VALUE
+	//
+	// maps a value from one range to another
+	// ta Processing: http://processing.org
+	// NOTE: does not clamp the values
+	//
+	_o.mapValue = function( val, origMin, origMax, newMin, newMax ){
+		return newMin + ( newMax - newMin ) * ( ( val - origMin ) / ( origMax - origMin ) );
+	};
+
+	// RANDOM RANGE
+	// gives us a range of values
+	_o.randomRange = function( fromValue, toValue ){
+		return fromValue + ( Math.random() * ( toValue - fromValue ) );
+	}
+
+// VECTORS
+// basic 2d vector class, courtesy L A Watts...
+_o.vec2D = function( x, y ){
+	this.x = x || 0;
+	this.y = y || 0;
+};
+
+_o.vec2D.prototype = {
+  copyFrom: function( vect ){
+	this.x = vect.x;
+	this.y = vect.y;
+  },
+  plus: function( vect ){
+	this.x += vect.x;
+	this.y += vect.y;
+  },
+  equals: function( vect ){
+	this.x = vect.x;
+	this.y = vect.y;
+  },
+  mult: function( val ){
+  	this.x *= val;
+  	this.y *= val;
+  }
+};
+
+// MOUSE INTERACTION
+//
+// we keep this info about the mouse:
 // x : document x position
 // y : document y position
 // down : is the button up or down ( true/false )
@@ -127,14 +174,12 @@ _o.log = _o.pageConsole.log;
 		_o.pMouse.x	= _o.mouse.x;
 		_o.pMouse.y = _o.mouse.y;
 		
-		if (e.pageX || e.pageY) 	{
-			_o.mouse.x = 	e.pageX;
-			_o.mouse.y = 	e.pageY;
-		} else if (e.clientX || e.clientY) 	{ //not eerything provides pageX/Y...
-			_o.mouse.x = 	e.clientX + document.body.scrollLeft
-		   		+ document.documentElement.scrollLeft;
-			_o.mouse.y = 	e.clientY + document.body.scrollTop
-				+ document.documentElement.scrollTop;
+		if (e.pageX || e.pageY){
+			_o.mouse.x = e.pageX;
+			_o.mouse.y = e.pageY;
+		} else if (e.clientX || e.clientY){ //not eerything provides pageX/Y...
+			_o.mouse.x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+			_o.mouse.y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
 		}
 
 		//tracks mouse on a per canvas basis
@@ -317,24 +362,9 @@ _o.touchEnd = function( e ){
 
 	_o.addListeners();
 
-// NUMBER GENERATION & ADJUSTMENT 
 
-	// MAP VALUE
-	//
-	// maps a value from one range to another
-	// ta Processing: http://processing.org
-	// NOTE: does not clamp the values
-	//
-	_o.mapValue = function( val, origMin, origMax, newMin, newMax ){
-		return newMin + ( newMax - newMin ) * ( ( val - origMin ) / ( origMax - origMin ) );
-	};
+// AUDIOVISUAL	
 
-	_o.randomRange = function ( fromValue, toValue ){
-		return fromValue + ( Math.random() * ( toValue - fromValue ) );
-	}
-
-// AUDIOVISUAL
-	
 	//we keep a list of canvasses for reference & for mouse tracking
 	_o.canvasses = [];
 
@@ -444,21 +474,23 @@ _o.touchEnd = function( e ){
 		return this.tempCtx.getImageData( 0, 0, image.width, image.height );
 	}
 
+	_o.audio = null;
+
 	// CREATE AUDIO
 	//
 	// creates and returns an audio context
 	// normalises the webkit prefix
-	// returns empty object if no audio support
-	_o.createAudio = function( ){
-		var audio = {};
-
-		if (typeof AudioContext == "function") {
-			audio.ctx = new AudioContext();
-		} else if (typeof webkitAudioContext == "function") {
-			audio.ctx = new webkitAudioContext();
-		} 
-
-		return audio;
+	// returns empty object if no audio touchSupport
+	_o.createAudio = function( ){		
+		if( !_o.audio ){
+			_o.audio = {};
+			if ( _o.browser.webAudioSupport === true ) {
+				audio.ctx = new AudioContext();
+			} else if ( _o.browser.webAudioSupport === "webkit" ) {
+				audio.ctx = new webkitAudioContext();
+			} 
+		}
+		return _o.audio;
 	};
 
 	// SOUND LOADER
@@ -494,10 +526,10 @@ _o.touchEnd = function( e ){
 	// sends _o.loadSound the optional parameter arrayPosition so that the 
 	// resultant array is the same order as the one passed in.
 	_o.loadSounds = function( sources, callback ){	
-		var loadCount = 0;
-		var loadAim = sources.length;
-		var sounds = []; 		
-		if( loadAim > 0 ){
+		if( sources && sources.length > 0 ){	
+			var loadCount = 0;
+			var loadAim = sources.length;
+			var sounds = []; 				
 			for( var i = 0; i < loadAim; i++ ){					
 				_o.loadSound( sources[i], function( sound, arrayPosition ){			
 					loadCount++;
@@ -509,6 +541,72 @@ _o.touchEnd = function( e ){
 			}
 		}
 	}
+
+	// GET USER MEDIA
+	//
+	// get the user's webcam &/ microphone
+	// 
+	// TODO
+	_o.getMicrophone = function( callback ){
+		if( !_o.audio ){
+			_o.createAudio();
+		}	
+		var success = function( stream ){
+			var mocSource = _o.audio.ctx.createMediaStreamSource( stream );
+			if( typeof callback === "function" ){
+				callback( micSource );
+			}
+		}
+		var failure = function( error ){
+			throw new Error( error );
+		}
+		if( _o.browser.getUserMediaSupport === true ){
+			navigator.getUserMedia( { audio: true }, success, failure );
+		} else if( _o.browser.getUserMediaSupport === "webkit" ){
+			navigator.webkitGetUserMedia( { audio: true }, success, failure );
+		}
+
+	}
+	if (typeof navigator.webkitGetUserMedia == 'function') {
+			//create web audio api		
+			if ( typeof webkitAudioContext == "function" ) {
+				var audioContext;
+				var micSource;
+				var micAnalysis;
+				var volume = 0;
+		        navigator.webkitGetUserMedia(
+		        	{audio: true}, 
+		            function( stream ) {		            	
+		            	audioContext = new webkitAudioContext();
+		            	
+		            	//create our source node from mic stream
+		            	micSource = audioContext.createMediaStreamSource( stream );
+		            	micAnalysis = audioContext.createAnalyser();	
+		            	micAnalysis.fftSize = 1024;	            	
+		            	micSource.connect( micAnalysis );		            	
+		            	
+		            	//micAnalysis.connect( audioContext.destination );
+		            	
+		            	window.setInterval(function(){
+		            		var data = new Uint8Array(micAnalysis.fftSize);
+  							micAnalysis.getByteFrequencyData(data);	
+  							var total = 0;
+  							for( var i = 0; i < data.length; i++ ){
+  								total += data[i];
+  							}	
+  							volume = total / data.length;
+
+		            	},100);
+		            },
+		            function(error) {
+		                // User denied or an error occurred
+		               console.log( 'failure' );
+		            }
+		        );
+		    }
+	    } else {
+	    	console.log( 'not supported' );
+	    }
 
 // SHIVS/SHIMS
 
