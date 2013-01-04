@@ -263,10 +263,15 @@ _o.vec2D.prototype = {
 //   use case & should be made more general
 // - store in an array for ease of access?
 
+//should the default touch events be overriden?
+_o.TOUCH_OVERRIDE_DEFAULT = false;
+
 _o.touches = {};
 
 _o.trackTouch = function( e ){
-	e.preventDefault();
+	if( _o.TOUCH_OVERRIDE_DEFAULT ){
+		e.preventDefault();
+	}
 
 	for( var i = 0; i < e.touches.length; i++ ){
 		var newTouch = e.touches[i];
@@ -296,7 +301,10 @@ _o.trackTouch = function( e ){
 }
 
 _o.touchEnd = function( e ){
-	e.preventDefault();
+	if( _o.TOUCH_OVERRIDE_DEFAULT ){
+		e.preventDefault();
+	}
+	
 	var changedTouches = e.changedTouches;
 
 	for( var i = 0; i < changedTouches.length; i++ ){
