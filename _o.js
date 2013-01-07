@@ -26,7 +26,7 @@
 // SETUP
 
 	var _o = {
-		VERSION: '0.0.7',
+		VERSION: '0.0.8',
 		DEBUG : false
 	};
 
@@ -126,6 +126,19 @@ _o.log = _o.pageConsole.log;
 	// gives us a range of values
 	_o.randomRange = function( fromValue, toValue ){
 		return fromValue + ( Math.random() * ( toValue - fromValue ) );
+	}
+
+	// RANDOM HEX COLOUR CODE
+	// gives us a 6 digit hexadecimal string, prefixed with a hash ( pass true to remove hash );
+	_o.randomHexClr = function( removeHash ){
+		var hex = '';
+		if( !removeHash ){
+			hex += '#';
+		}
+		for( var i = 0; i < 6; i++ ){
+			hex += Math.floor(WS.random(0,16)).toString(16);
+		}
+		return hex;
 	}
 
 // VECTORS
