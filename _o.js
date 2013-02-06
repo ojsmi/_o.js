@@ -26,7 +26,7 @@
 // SETUP
 
 	var _o = {
-		VERSION: '0.0.8',
+		VERSION: '0.0.9',
 		DEBUG : false
 	};
 
@@ -53,7 +53,7 @@ _o.browser.touchSupport = (function() {
 })();
 
 _o.browser.getUserMediaSupport = (function() {
-    return ( typeof GetUserMedia === "function" ) ? true : ( typeof webkitGetUserMedia === "function" ) ? 'webkit' : false;
+    return ( typeof navigator.GetUserMedia === "function" ) ? true : ( typeof navigator.webkitGetUserMedia === "function" ) ? 'webkit' : false;
 })();
 
 
@@ -506,9 +506,9 @@ _o.touchEnd = function( e ){
 		if( !_o.audio ){
 			_o.audio = {};
 			if ( _o.browser.webAudioSupport === true ) {
-				audio.ctx = new AudioContext();
+				_o.audio.ctx = new AudioContext();
 			} else if ( _o.browser.webAudioSupport === "webkit" ) {
-				audio.ctx = new webkitAudioContext();
+				_o.audio.ctx = new webkitAudioContext();
 			} 
 		}
 		return _o.audio;
@@ -565,7 +565,7 @@ _o.touchEnd = function( e ){
 
 	// GET USER MEDIA
 	//
-	// get the user's webcam &/ microphone
+	// get the user's microphone
 	// 
 	// TODO
 	_o.getMicrophone = function( callback ){
@@ -573,7 +573,7 @@ _o.touchEnd = function( e ){
 			_o.createAudio();
 		}	
 		var success = function( stream ){
-			var mocSource = _o.audio.ctx.createMediaStreamSource( stream );
+			var micSource = _o.audio.ctx.createMediaStreamSource( stream );			
 			if( typeof callback === "function" ){
 				callback( micSource );
 			}
