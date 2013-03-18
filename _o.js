@@ -26,7 +26,7 @@
 // SETUP
 
 	var _o = {
-		VERSION: '0.0.9',
+		VERSION: '0.0.10',
 		DEBUG : false
 	};
 
