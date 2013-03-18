@@ -136,7 +136,7 @@ _o.log = _o.pageConsole.log;
 			hex += '#';
 		}
 		for( var i = 0; i < 6; i++ ){
-			hex += Math.floor(WS.random(0,16)).toString(16);
+			hex += Math.floor( _o.randomRange(0,16) ).toString(16);
 		}
 		return hex;
 	}
