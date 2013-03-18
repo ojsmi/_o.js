@@ -143,6 +143,7 @@ _o.log = _o.pageConsole.log;
 
 // VECTORS
 // basic 2d vector class, courtesy L A Watts...
+// 3d version ( _o.vec ) added, 2d remains for compatibility
 _o.vec2D = function( x, y ){
 	this.x = x || 0;
 	this.y = y || 0;
@@ -164,6 +165,37 @@ _o.vec2D.prototype = {
   mult: function( val ){
   	this.x *= val;
   	this.y *= val;
+  }
+};
+
+// VECTORS
+// basic 3d vector class
+_o.vec = function( x, y, z ){
+	this.x = x || 0;
+	this.y = y || 0;
+	this.z = z || 0;
+};
+
+_o.vec.prototype = {
+  copyFrom: function( vect ){
+	this.x = vect.x;
+	this.y = vect.y;
+	this.z = vect.z;
+  },
+  plus: function( vect ){
+	this.x += vect.x;
+	this.y += vect.y;
+	this.z += vect.z;
+  },
+  equals: function( vect ){
+	this.x = vect.x;
+	this.y = vect.y;
+	this.z = vect.z;
+  },
+  mult: function( val ){
+  	this.x *= val;
+  	this.y *= val;
+  	this.z *= val;
   }
 };
 
