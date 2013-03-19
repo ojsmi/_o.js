@@ -599,7 +599,6 @@ _o.touchEnd = function( e ){
 	//
 	// get the user's microphone
 	// 
-	// TODO
 	_o.getMicrophone = function( callback ){
 		if( !_o.audio ){
 			_o.createAudio();
@@ -617,6 +616,24 @@ _o.touchEnd = function( e ){
 			navigator.getUserMedia( { audio: true }, success, failure );
 		} else if( _o.browser.getUserMediaSupport === "webkit" ){
 			navigator.webkitGetUserMedia( { audio: true }, success, failure );
+		}
+	}	
+	
+	// get the user's webcam
+	// 
+	_o.getCamera = function( callback ){
+		var success = function( cam ){
+			if( typeof callback === "function" ){
+				callback( cam );
+			}
+		}
+		var failure = function( error ){			
+			throw new Error( error );
+		}
+		if( _o.browser.getUserMediaSupport === true ){
+			navigator.getUserMedia( { video: true }, success, failure );
+		} else if( _o.browser.getUserMediaSupport === "webkit" ){
+			navigator.webkitGetUserMedia( { video: true }, success, failure );
 		}
 	}	
 
