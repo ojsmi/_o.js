@@ -105,7 +105,7 @@ _o.pageConsole.log = function( info ){
 //if we're running debug mode, then show this console thing
 if( _o.DEBUG ){
 	_o.pageConsole();
-}
+};
 
 //convenience
 _o.log = _o.pageConsole.log;
@@ -126,7 +126,7 @@ _o.log = _o.pageConsole.log;
 	// gives us a range of values
 	_o.randomRange = function( fromValue, toValue ){
 		return fromValue + ( Math.random() * ( toValue - fromValue ) );
-	}
+	};
 
 	// RANDOM HEX COLOUR CODE
 	// gives us a 6 digit hexadecimal string, prefixed with a hash ( pass true to remove hash );
@@ -139,6 +139,12 @@ _o.log = _o.pageConsole.log;
 			hex += Math.floor( _o.randomRange(0,16) ).toString(16);
 		}
 		return hex;
+	};
+
+	//ABS
+	//absolute value, taken from: http://www.soundstep.com/blog/experiments/jsdetection/js/app.js
+	_o.abs = function( value ) {		
+		return (value ^ (value >> 31)) - (value >> 31);
 	}
 
 // VECTORS
@@ -238,11 +244,11 @@ _o.vec.prototype = {
 	_o.mouseDown = function(){
 		_o.pMouse.down = _o.mouse.down;
 		_o.mouse.down = true;
-	}
+	};
 	_o.mouseUp = function(e){	
 		_o.pMouse.down = _o.mouse.down;
 		_o.mouse.down = false;
-	}
+	};
 
 // KEYBOARD INTERACTION
 //
@@ -283,7 +289,8 @@ _o.vec.prototype = {
 			_o.keys.pressed.push( name );
 			_o.keys.lastDown = name;
 		}
-	}
+	};
+
 	_o.keyUp = function( e ){		
 		var name = _o.keys.listByCode[ e.keyCode ];
 		var indexToRemove = -1;
@@ -296,7 +303,7 @@ _o.vec.prototype = {
 			_o.keys.pressed.splice( indexToRemove, 1 );
 		} 	
 		_o.keys.lastUp = name;	
-	}
+	};
 
 // TOUCH INTERACTION
 // store touches as an object literal, indexed by ID.
@@ -343,7 +350,7 @@ _o.trackTouch = function( e ){
 		}
 
 	}
-}
+};
 
 _o.touchEnd = function( e ){
 	if( _o.TOUCH_OVERRIDE_DEFAULT ){
@@ -360,7 +367,7 @@ _o.touchEnd = function( e ){
 			}
 		}		
 	}
-}
+};
 
 
 // ADD LISTENERS
@@ -411,7 +418,7 @@ _o.touchEnd = function( e ){
 				throw new Error( 'This browser does not support \'addEventListener()\'' );
 			}
 		}
-	}
+	};
 
 	_o.addListeners();
 
@@ -466,19 +473,21 @@ _o.touchEnd = function( e ){
 			this_canvas.mouse.x = ( canvas_mouse_x  >= 0 && canvas_mouse_x  <= this_canvas.w ) ? canvas_mouse_x : -1;			
 			this_canvas.mouse.y = ( canvas_mouse_y  >= 0 && canvas_mouse_y  <= this_canvas.h ) ? canvas_mouse_y : -1;	
 		}
-	}
+	};
 
 	// A FRAME RATE/DRAWER
 	// 
 	// overwrite _o.draw to have our code executed every frame	
+	_o.isLooping = false;
 	_o.loop = function(){
-		
+		if( !_o.isLooping ){
+			_o.isLooping = true;
+		}
 		if( typeof _o.draw === 'function' ){
 			_o.draw();
-		}
-
+		}		
 		requestAnimationFrame( _o.loop );
-	}
+	};
 
 	//IMAGE LOADER
 	//
@@ -508,7 +517,7 @@ _o.touchEnd = function( e ){
 				images[i].image.src = images[i].src;
 			}
 		}
-	}
+	};
 
 	//PIXEL DATA LOADER
 	//
@@ -525,7 +534,7 @@ _o.touchEnd = function( e ){
 		this.tempCtx.drawImage( image, 0, 0 , image.width, image.height );
 		//get the pixels & return
 		return this.tempCtx.getImageData( 0, 0, image.width, image.height );
-	}
+	};
 
 	_o.audio = null;
 
@@ -567,7 +576,7 @@ _o.touchEnd = function( e ){
 			}
 		}
 		request.send();		
-	}
+	};
 
 	// MULTIPLE SOUND LOADER
 	//
@@ -593,17 +602,20 @@ _o.touchEnd = function( e ){
 				}, i );
 			}
 		}
-	}
+	};
 
 	// GET USER MEDIA
 	//
 	// get the user's microphone
 	// 
+	_o.hasMicrophone = false;
+
 	_o.getMicrophone = function( callback ){
 		if( !_o.audio ){
 			_o.createAudio();
 		}	
 		var success = function( stream ){
+			_o.hasMicrophone = true;
 			var micSource = _o.audio.ctx.createMediaStreamSource( stream );			
 			if( typeof callback === "function" ){
 				callback( micSource );
@@ -617,14 +629,37 @@ _o.touchEnd = function( e ){
 		} else if( _o.browser.getUserMediaSupport === "webkit" ){
 			navigator.webkitGetUserMedia( { audio: true }, success, failure );
 		}
-	}	
+	};
 	
 	// get the user's webcam
 	// 
+	_o.webcam = {
+		w: 320,
+		h: 240,
+		ele: document.createElement('video'),
+		movementThreshold: 1000,
+		movement: new _o.vec( 0 , 0 )
+	};
+
 	_o.getCamera = function( callback ){
 		var success = function( cam ){
+			var src;
+			if( !_o.webcam.ele ){
+				_o.webcam.ele = document.createElement('video');
+			}
+			_o.webcam.isActive = true;
+			
+			if( _o.browser.getUserMediaSupport === 'webkit' ){
+				src = window.webkitURL.createObjectURL( cam );
+			} else if( _o.browser.getUserMediaSupport === true ){
+				src = cam;
+			}
+
+			_o.webcam.ele.src = src;
+			_o.webcam.ele.play();
+			
 			if( typeof callback === "function" ){
-				callback( cam );
+				callback( webcam.ele );
 			}
 		}
 		var failure = function( error ){			
@@ -635,7 +670,100 @@ _o.touchEnd = function( e ){
 		} else if( _o.browser.getUserMediaSupport === "webkit" ){
 			navigator.webkitGetUserMedia( { video: true }, success, failure );
 		}
-	}	
+	};
+
+	_o.analyseCamera = function( _blocksX, _blocksY ){
+		var blocksX = _blocksX || 10;
+		var blocksY = _blocksY || 10;
+		if( !_o.webcam.isActive && !_o.webcam.requestedCamera ){
+			_o.webcam.requestedCamera = true;
+			_o.getCamera();
+		} 
+		if( _o.webcam.isActive ){				
+			if( !_o.webcam.canvas ){
+				_o.webcam.canvas = _o.createCanvas( _o.webcam.w, _o.webcam.h );
+				_o.webcam.prevFrame = _o.webcam.canvas.ctx.getImageData( 0, 0, _o.webcam.canvas.w, _o.webcam.canvas.h );		
+			}			
+			var c = _o.webcam.canvas;
+			//flip cam
+			c.ctx.save();
+			c.ctx.translate( c.w, 0);
+			c.ctx.scale( -1, 1 );
+			//draw cam
+			c.ctx.drawImage( _o.webcam.ele, 0, 0, c.w, c.h );
+			_o.webcam.currFrame = c.ctx.getImageData( 0, 0, c.w, c.h );
+
+			var movement = _o.frameDifference( _o.webcam.prevFrame, _o.webcam.currFrame, blocksX, blocksY );
+			if( movement.value > _o.webcam.movementThreshold ){
+				_o.webcam.movement.x = movement.location.x;
+				_o.webcam.movement.y = movement.location.y;
+			}
+			_o.webcam.prevFrame = c.ctx.getImageData( 0, 0, c.w, c.h );			
+			c.ctx.restore();
+
+		} 
+	};
+
+	_o.frameDifference = function( _previousFrame, _currentFrame, _blockCountX, _blockCountY ){
+		var previousFrame = _previousFrame;
+		var currentFrame = _currentFrame;
+		var frameWidth = currentFrame.width;
+		var frameHeight = currentFrame.height;
+		var blockCountX = _blockCountX;
+		var blockCountY = _blockCountY;
+		var totalBlocks = blockCountX * blockCountY;
+		var blockWidth = frameWidth / blockCountX;
+		var blockHeight = frameHeight / blockCountY;
+		var pixelCount = frameWidth * frameHeight;
+		var movementByBlock = [];		
+		var mostMovement = {
+			value: 0,
+			index: 0,
+			location: new _o.vec( 0, 0 )
+		};
+		var currentBlock = 0; 			
+		for ( var i = 0; i < frameWidth; i += blockWidth ){
+			for ( var j = 0; j < frameHeight; j += blockHeight ){    
+				var blockMovement = _o.areaDifference( previousFrame, currentFrame, i, j, blockWidth, blockHeight );
+				movementByBlock[ currentBlock ] = blockMovement;
+				if( blockMovement > mostMovement.value ){
+					mostMovement.value = blockMovement;
+					mostMovement.index = currentBlock;
+					mostMovement.location = new _o.vec( i + ( .5* blockWidth ), j + ( .5* blockHeight ) );
+				}
+				currentBlock++;
+			}
+		}		
+		return mostMovement;		
+	}
+
+	_o.customDifference = function( _previousFrame, _currentFrame, _areas ){
+		//difference of custom defined areas, passed in as array, between current and previous frames
+	}
+
+	_o.areaDifference = function( _previousFrame, _currentFrame, _topLeftX, _topLeftY, _areaWidth, _areaHeight ){
+		var previousFrame = _previousFrame;
+		var currentFrame = _currentFrame;
+		var currentRGBA = currentFrame.data;
+		var previousRGBA = previousFrame.data;
+		var frameWidth = currentFrame.width;
+		var topLeftX = _topLeftX;
+		var topLeftY = _topLeftY;
+		var areaWidth = _areaWidth;
+		var areaHeight = _areaHeight;
+		var blockMovement = 0;				
+		for ( var k = topLeftX; k < topLeftX + areaWidth; k++ ) {
+			for ( var l = topLeftY; l < topLeftY + areaHeight; l++ ) {
+				var pos = (k + ( frameWidth * l )) * 4; //canvas gives us rgba values in px array
+				var currColour = currentRGBA[pos] + currentRGBA[pos+1] + currentRGBA[pos+2] / 3;						
+				var prevColour = previousRGBA[pos] + previousRGBA[pos+1] + previousRGBA[pos+2] / 3;                
+				var diff = _o.abs( currColour - prevColour );            
+				blockMovement += diff;                						
+			}
+		}		
+		return blockMovement;
+	}
+
 
 // SHIVS/SHIMS
 
