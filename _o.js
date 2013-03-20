@@ -637,7 +637,7 @@ _o.touchEnd = function( e ){
 		w: 320,
 		h: 240,
 		ele: document.createElement('video'),
-		movementThreshold: 1000,
+		movementThreshold: 1000 ,
 		movement: new _o.vec( 0 , 0 )
 	};
 
@@ -672,41 +672,37 @@ _o.touchEnd = function( e ){
 		}
 	};
 
-	_o.analyseCamera = function( _blocksX, _blocksY ){
-		var blocksX = _blocksX || 10;
-		var blocksY = _blocksY || 10;
+	_o.stepCamera = function(){
 		if( !_o.webcam.isActive && !_o.webcam.requestedCamera ){
 			_o.webcam.requestedCamera = true;
 			_o.getCamera();
 		} 
 		if( _o.webcam.isActive ){				
 			if( !_o.webcam.canvas ){
-				_o.webcam.canvas = _o.createCanvas( _o.webcam.w, _o.webcam.h );
-				_o.webcam.prevFrame = _o.webcam.canvas.ctx.getImageData( 0, 0, _o.webcam.canvas.w, _o.webcam.canvas.h );		
+				_o.webcam.canvas = _o.createCanvas( _o.webcam.w, _o.webcam.h );				
 			}			
 			var c = _o.webcam.canvas;
+			//save previous frame
+			_o.webcam.previousFrame = c.ctx.getImageData( 0, 0, c.w, c.h );	
 			//flip cam
 			c.ctx.save();
-			c.ctx.translate( c.w, 0);
+			c.ctx.translate( c.w, 0 );
 			c.ctx.scale( -1, 1 );
 			//draw cam
 			c.ctx.drawImage( _o.webcam.ele, 0, 0, c.w, c.h );
-			_o.webcam.currFrame = c.ctx.getImageData( 0, 0, c.w, c.h );
-
-			var movement = _o.frameDifference( _o.webcam.prevFrame, _o.webcam.currFrame, blocksX, blocksY );
-			if( movement.value > _o.webcam.movementThreshold ){
-				_o.webcam.movement.x = movement.location.x;
-				_o.webcam.movement.y = movement.location.y;
-			}
-			_o.webcam.prevFrame = c.ctx.getImageData( 0, 0, c.w, c.h );			
+			_o.webcam.currentFrame = c.ctx.getImageData( 0, 0, c.w, c.h );
+		
 			c.ctx.restore();
 
 		} 
 	};
 
-	_o.frameDifference = function( _previousFrame, _currentFrame, _blockCountX, _blockCountY ){
-		var previousFrame = _previousFrame;
-		var currentFrame = _currentFrame;
+	_o.frameDifference = function( _blockCountX, _blockCountY ){
+		//get current frame before running analysis
+		_o.stepCamera();
+		
+		var previousFrame = _o.webcam.previousFrame;
+		var currentFrame = _o.webcam.currentFrame;
 		var frameWidth = currentFrame.width;
 		var frameHeight = currentFrame.height;
 		var blockCountX = _blockCountX;
@@ -719,12 +715,14 @@ _o.touchEnd = function( e ){
 		var mostMovement = {
 			value: 0,
 			index: 0,
-			location: new _o.vec( 0, 0 )
+			location: new _o.vec( _o.webcam.movement.x, _o.webcam.movement.y )
 		};
+
+
 		var currentBlock = 0; 			
 		for ( var i = 0; i < frameWidth; i += blockWidth ){
 			for ( var j = 0; j < frameHeight; j += blockHeight ){    
-				var blockMovement = _o.areaDifference( previousFrame, currentFrame, i, j, blockWidth, blockHeight );
+				var blockMovement = _o.areaDifference( i, j, blockWidth, blockHeight );
 				movementByBlock[ currentBlock ] = blockMovement;
 				if( blockMovement > mostMovement.value ){
 					mostMovement.value = blockMovement;
@@ -733,34 +731,70 @@ _o.touchEnd = function( e ){
 				}
 				currentBlock++;
 			}
-		}		
+		}
+		_o.webcam.movement = new _o.vec( mostMovement.location.x, mostMovement.location.y );	
 		return mostMovement;		
 	}
 
-	_o.customDifference = function( _previousFrame, _currentFrame, _areas ){
-		//difference of custom defined areas, passed in as array, between current and previous frames
+
+	//pass in array of custom defined areas
+	//each area defined as object with following parameters
+	//	{
+	//		topLeftX: 0,
+	//		topLeftY: 0,
+	//		width: 0,
+	//		height	
+	//	}
+	_o.customDifference = function( _areas ){		
+		//get current frame before running analysis
+		_o.stepCamera();	
+
+		var movementByArea = [];		
+		var mostMovement = {
+			value: 0,
+			index: 0,
+			location: new _o.vec( _o.webcam.movement.x, _o.webcam.movement.y )
+		};
+		var areas = _areas;
+
+		for( var i = 0, iLen = areas.length; i < iLen; i++ ){
+			var area = areas[i];
+			var areaMovement = _o.areaDifference( area.topLeftX, area.topLeftY, area.width, area.height );
+			movementByArea[ i ] = areaMovement;
+			if( areaMovement > mostMovement.value ){
+				mostMovement.value = areaMovement;
+				mostMovement.index = i;
+				mostMovement.location = new _o.vec( area.topLeftX + ( .5* area.width ), area.topLeftY + ( .5* area.height ) );
+			}
+		}
+		_o.webcam.movement = new _o.vec( mostMovement.location.x, mostMovement.location.y );
+		return mostMovement;
 	}
 
-	_o.areaDifference = function( _previousFrame, _currentFrame, _topLeftX, _topLeftY, _areaWidth, _areaHeight ){
-		var previousFrame = _previousFrame;
-		var currentFrame = _currentFrame;
-		var currentRGBA = currentFrame.data;
-		var previousRGBA = previousFrame.data;
-		var frameWidth = currentFrame.width;
-		var topLeftX = _topLeftX;
-		var topLeftY = _topLeftY;
-		var areaWidth = _areaWidth;
-		var areaHeight = _areaHeight;
-		var blockMovement = 0;				
-		for ( var k = topLeftX; k < topLeftX + areaWidth; k++ ) {
-			for ( var l = topLeftY; l < topLeftY + areaHeight; l++ ) {
-				var pos = (k + ( frameWidth * l )) * 4; //canvas gives us rgba values in px array
-				var currColour = currentRGBA[pos] + currentRGBA[pos+1] + currentRGBA[pos+2] / 3;						
-				var prevColour = previousRGBA[pos] + previousRGBA[pos+1] + previousRGBA[pos+2] / 3;                
-				var diff = _o.abs( currColour - prevColour );            
-				blockMovement += diff;                						
-			}
-		}		
+	_o.areaDifference = function( _topLeftX, _topLeftY, _areaWidth, _areaHeight ){
+		var previousFrame = _o.webcam.previousFrame;
+		var currentFrame = _o.webcam.currentFrame;
+		var blockMovement = 0;	
+		if( previousFrame && currentFrame ){
+			var currentRGBA = currentFrame.data;
+			var previousRGBA = previousFrame.data;
+			var frameWidth = currentFrame.width;
+			var topLeftX = _topLeftX;
+			var topLeftY = _topLeftY;
+			var areaWidth = _areaWidth;
+			var areaHeight = _areaHeight;
+					
+
+			for ( var k = topLeftX; k < topLeftX + areaWidth; k++ ) {
+				for ( var l = topLeftY; l < topLeftY + areaHeight; l++ ) {
+					var pos = (k + ( frameWidth * l )) * 4; //canvas gives us rgba values in px array
+					var currColour = currentRGBA[pos] + currentRGBA[pos+1] + currentRGBA[pos+2] / 3;						
+					var prevColour = previousRGBA[pos] + previousRGBA[pos+1] + previousRGBA[pos+2] / 3;                
+					var diff = _o.abs( currColour - prevColour );            
+					blockMovement += diff;                						
+				}
+			}		
+		}
 		return blockMovement;
 	}
 
