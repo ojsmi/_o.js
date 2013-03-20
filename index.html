@@ -18,7 +18,7 @@
 	</style>
 </head>
 <body>
-	<!-- 
+	
 	<h1>_o.js info</h1>
 
 	<h2>Version</h2>
@@ -28,7 +28,7 @@
 	<ul id="support"></ul>	
 
 	<div id="console">
-	</div> -->
+	</div>
 	
 	<script src="_o.js"></script>
 	<script type="text/javascript">		
@@ -45,39 +45,18 @@
 		}
 
 		//TEST frame diff
-		// var c = _o.createCanvas( window.innerWidth, window.innerHeight );
+		var c = _o.createCanvas( window.innerWidth, window.innerHeight );
 		
-		// document.body.appendChild( c.canvas );
+		document.body.appendChild( c.canvas );
 
-		// var areas = [
-		// 	{
-		// 		topLeftX: 0,
-		// 		topLeftY: 0,
-		// 		width: 160,
-		// 		height: 240
-		// 	},
-		// 	{
-		// 		topLeftX: 160,
-		// 		topLeftY: 0,
-		// 		width: 160,
-		// 		height: 240
-		// 	}
-		// ];
+		_o.draw = function(){
+			var avg = _o.averageColour();
+			console.log( avg );
+			c.ctx.fillStyle = 'rgb(' + avg.red + ',' + avg.green + ',' + avg.blue + ')';
+			c.ctx.fillRect( 0, 0, c.w, c.h );
+		};
 
-		// _o.draw = function(){
-		// 	var movement = _o.customDifference( areas );			
-		// 	var x = _o.mapValue( movement.location.x, 0, _o.webcam.w, 0, window.innerWidth );
-		// 	var y = _o.mapValue( movement.location.y, 0, _o.webcam.h, 0, window.innerHeight );
-		// 	c.ctx.clearRect( 0, 0, c.w, c.h );
-		// 	c.ctx.save();
-		// 		c.ctx.translate( c.w, 0);
-		// 		c.ctx.scale( -1, 1 );
-		// 		c.ctx.drawImage( _o.webcam.ele, 0, 0, c.w, c.h );
-		// 	c.ctx.restore();
-		// 	c.ctx.fillRect( x, y, 10 , 10 );
-		// };
-
-		// _o.loop();
+		_o.loop();
 
 		//end
 	</script>

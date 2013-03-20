@@ -483,9 +483,10 @@ _o.touchEnd = function( e ){
 		if( !_o.isLooping ){
 			_o.isLooping = true;
 		}
+		_o.webcam.steppedThisFrame = false;
 		if( typeof _o.draw === 'function' ){
 			_o.draw();
-		}		
+		}				
 		requestAnimationFrame( _o.loop );
 	};
 
@@ -604,7 +605,10 @@ _o.touchEnd = function( e ){
 		}
 	};
 
+// INPUT & ANALYSIS
 	// GET USER MEDIA
+
+	//SOUND
 	//
 	// get the user's microphone
 	// 
@@ -631,9 +635,12 @@ _o.touchEnd = function( e ){
 		}
 	};
 	
+	//VIDEO
+	//
 	// get the user's webcam
 	// 
 	_o.webcam = {
+		steppedThisFrame: false,
 		w: 320,
 		h: 240,
 		ele: document.createElement('video'),
@@ -673,28 +680,33 @@ _o.touchEnd = function( e ){
 	};
 
 	_o.stepCamera = function(){
-		if( !_o.webcam.isActive && !_o.webcam.requestedCamera ){
-			_o.webcam.requestedCamera = true;
-			_o.getCamera();
-		} 
-		if( _o.webcam.isActive ){				
-			if( !_o.webcam.canvas ){
-				_o.webcam.canvas = _o.createCanvas( _o.webcam.w, _o.webcam.h );				
-			}			
-			var c = _o.webcam.canvas;
-			//save previous frame
-			_o.webcam.previousFrame = c.ctx.getImageData( 0, 0, c.w, c.h );	
-			//flip cam
-			c.ctx.save();
-			c.ctx.translate( c.w, 0 );
-			c.ctx.scale( -1, 1 );
-			//draw cam
-			c.ctx.drawImage( _o.webcam.ele, 0, 0, c.w, c.h );
-			_o.webcam.currentFrame = c.ctx.getImageData( 0, 0, c.w, c.h );
-		
-			c.ctx.restore();
+		if( !_o.webcam.steppedThisFrame ){
+			if( !_o.webcam.isActive && !_o.webcam.requestedCamera ){
+				_o.webcam.requestedCamera = true;
+				_o.getCamera();
+			} 
+			if( _o.webcam.isActive ){				
+				if( !_o.webcam.canvas ){
+					_o.webcam.canvas = _o.createCanvas( _o.webcam.w, _o.webcam.h );				
+				}			
+				var c = _o.webcam.canvas;
+				//save previous frame
+				_o.webcam.previousFrame = c.ctx.getImageData( 0, 0, c.w, c.h );	
+				//flip cam
+				c.ctx.save();
+				c.ctx.translate( c.w, 0 );
+				c.ctx.scale( -1, 1 );
+				//draw cam
+				c.ctx.drawImage( _o.webcam.ele, 0, 0, c.w, c.h );
+				_o.webcam.currentFrame = c.ctx.getImageData( 0, 0, c.w, c.h );
+			
+				c.ctx.restore();
 
-		} 
+			} 
+
+			_o.webcam.steppedThisFrame = true;
+		}
+
 	};
 
 	_o.frameDifference = function( _blockCountX, _blockCountY ){
@@ -798,6 +810,42 @@ _o.touchEnd = function( e ){
 		return blockMovement;
 	}
 
+	//AVERAGE COLOUR
+	_o.averageColour = function( _pixels, _resolution ){
+		//get current frame before running analysis
+		_o.stepCamera();
+		var average = {
+			red: 0,
+			green: 0,
+			blue: 0,
+			brightness: 0
+		};
+		if( _o.webcam.currentFrame || _pixels ){
+			var pixels = _pixels || _o.webcam.currentFrame.data;
+			var pixelCount = pixels.length / 4;
+			var resolution = _resolution || 1;
+			var total = {
+				red: 0,
+				green: 0,
+				blue: 0,
+				brightness: 0
+			};			
+			for( var i = 0; i < pixelCount; i += resolution ){
+				var loc = i * 4;
+				total.red += pixels[ loc ]; 
+				total.green += pixels[ loc + 1 ];
+				total.blue += pixels[ loc + 2 ]; 
+				total.brightness += total.red + total.green + total.blue / 3;
+			}
+			average.red = Math.round(total.red / pixelCount);
+			average.green = Math.round(total.green / pixelCount);
+			average.blue = Math.round(total.blue / pixelCount);
+			average.brightness = Math.round(total.brightness / pixelCount);
+		}
+		return average;
+	}
+
+	//Device APIs
 
 // SHIVS/SHIMS
 
