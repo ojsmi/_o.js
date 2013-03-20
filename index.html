@@ -32,35 +32,52 @@
 	
 	<script src="_o.js"></script>
 	<script type="text/javascript">		
-		// // display the current version of _o.js
-		// var E_versionNumber = document.getElementById( 'version-number' );
-		// E_versionNumber.innerHTML = _o.VERSION;
+		// display the current version of _o.js
+		var E_versionNumber = document.getElementById( 'version-number' );
+		E_versionNumber.innerHTML = _o.VERSION;
 
-		// //show results of feature detection
-		// var E_supportList = document.getElementById( 'support' );
-		// for ( var s in _o.browser ){
-		// 	var E_li = document.createElement( 'li' );
-		// 	E_li.innerHTML = s + ": " + _o.browser[s];
-		// 	E_supportList.appendChild( E_li );
-		// }
-		var c = _o.createCanvas( window.innerWidth, window.innerHeight );
+		//show results of feature detection
+		var E_supportList = document.getElementById( 'support' );
+		for ( var s in _o.browser ){
+			var E_li = document.createElement( 'li' );
+			E_li.innerHTML = s + ": " + _o.browser[s];
+			E_supportList.appendChild( E_li );
+		}
+
+		//TEST frame diff
+		// var c = _o.createCanvas( window.innerWidth, window.innerHeight );
 		
-		document.body.appendChild( c.canvas );
+		// document.body.appendChild( c.canvas );
 
-		_o.draw = function(){
-			_o.analyseCamera( 10, 10 );
-			var x = _o.mapValue( _o.webcam.movement.x, 0, _o.webcam.w, 0, window.innerWidth );
-			var y = _o.mapValue( _o.webcam.movement.y, 0, _o.webcam.h, 0, window.innerHeight );
-			c.ctx.clearRect( 0, 0, c.w, c.h );
-			c.ctx.save();
-				c.ctx.translate( c.w, 0);
-				c.ctx.scale( -1, 1 );
-				c.ctx.drawImage( _o.webcam.ele, 0, 0, c.w, c.h );
-			c.ctx.restore();
-			c.ctx.fillRect( x, y, 10 , 10 );
-		};
+		// var areas = [
+		// 	{
+		// 		topLeftX: 0,
+		// 		topLeftY: 0,
+		// 		width: 160,
+		// 		height: 240
+		// 	},
+		// 	{
+		// 		topLeftX: 160,
+		// 		topLeftY: 0,
+		// 		width: 160,
+		// 		height: 240
+		// 	}
+		// ];
 
-		_o.loop();
+		// _o.draw = function(){
+		// 	var movement = _o.customDifference( areas );			
+		// 	var x = _o.mapValue( movement.location.x, 0, _o.webcam.w, 0, window.innerWidth );
+		// 	var y = _o.mapValue( movement.location.y, 0, _o.webcam.h, 0, window.innerHeight );
+		// 	c.ctx.clearRect( 0, 0, c.w, c.h );
+		// 	c.ctx.save();
+		// 		c.ctx.translate( c.w, 0);
+		// 		c.ctx.scale( -1, 1 );
+		// 		c.ctx.drawImage( _o.webcam.ele, 0, 0, c.w, c.h );
+		// 	c.ctx.restore();
+		// 	c.ctx.fillRect( x, y, 10 , 10 );
+		// };
+
+		// _o.loop();
 
 		//end
 	</script>
