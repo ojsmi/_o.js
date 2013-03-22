@@ -845,7 +845,7 @@ _o.touchEnd = function( e ){
 	}
 
 	//Device APIs
-	_o.orientation = {
+	_o.motion = {
 		default: { //the technical order
 			x: 0,
 			y: 0,
@@ -856,7 +856,7 @@ _o.touchEnd = function( e ){
 		y: 0,
 		z: 0
 	};
-	_o.pOrientation = {
+	_o.pMotion = {
 		default: {
 			x: 0,
 			y: 0,
@@ -869,18 +869,18 @@ _o.touchEnd = function( e ){
 
 	// ACCELEROMETER INTERACTION
 	_o.trackMotion = function( x, y, z ){
-		_o.pOrientation.default.x = _o.orientation.default.x;
-		_o.pOrientation.default.y = _o.orientation.default.y;
-		_o.pOrientation.default.z = _o.orientation.default.z;
-		_o.pOrientation.x = _o.orientation.x;
-		_o.pOrientation.y = _o.orientation.y;
-		_o.pOrientation.z = _o.orientation.z;
-		_o.orientation.default.x = x;
-		_o.orientation.default.y = y;
-		_o.orientation.default.z = z;
-		_o.orientation.x = y;
-		_o.orientation.y = x;
-		_o.orientation.z = z;
+		_o.pMotion.default.x = _o.motion.default.x;
+		_o.pMotion.default.y = _o.motion.default.y;
+		_o.pMotion.default.z = _o.motion.default.z;
+		_o.pMotion.x = _o.motion.x;
+		_o.pMotion.y = _o.motion.y;
+		_o.pMotion.z = _o.motion.z;
+		_o.motion.default.x = x;
+		_o.motion.default.y = y;
+		_o.motion.default.z = z;
+		_o.motion.x = y;
+		_o.motion.y = x;
+		_o.motion.z = z;
 	};
 
 	_o.listenForMotion = function(){
