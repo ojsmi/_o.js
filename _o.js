@@ -369,7 +369,6 @@ _o.touchEnd = function( e ){
 	}
 };
 
-
 // ADD LISTENERS
 // 
 // add the listeners for mouse and keyboard to the document
@@ -846,6 +845,61 @@ _o.touchEnd = function( e ){
 	}
 
 	//Device APIs
+	_o.orientation = {
+		default: { //the technical order
+			x: 0,
+			y: 0,
+			z: 0
+		},
+		//more usable for making movements
+		x: 0,
+		y: 0,
+		z: 0
+	};
+	_o.pOrientation = {
+		default: {
+			x: 0,
+			y: 0,
+			z: 0
+		},
+		x: 0,
+		y: 0,
+		z: 0
+	};
+
+	// ACCELEROMETER INTERACTION
+	_o.trackMotion = function( x, y, z ){
+		_o.pOrientation.default.x = _o.orientation.default.x;
+		_o.pOrientation.default.y = _o.orientation.default.y;
+		_o.pOrientation.default.z = _o.orientation.default.z;
+		_o.pOrientation.x = _o.orientation.x;
+		_o.pOrientation.y = _o.orientation.y;
+		_o.pOrientation.z = _o.orientation.z;
+		_o.orientation.default.x = x;
+		_o.orientation.default.y = y;
+		_o.orientation.default.z = z;
+		_o.orientation.x = y;
+		_o.orientation.y = x;
+		_o.orientation.z = z;
+	};
+
+	_o.listenForMotion = function(){
+		if (window.DeviceOrientationEvent) {
+			window.addEventListener('deviceorientation', function(event) {				
+				_o.trackMotion( event.beta, event.gamma, event.alpha );
+			}, true);
+		} else if (window.DeviceMotionEvent) {
+			window.addEventListener('devicemotion', function(event) {				
+				_o.trackMotion(event.acceleration.x * 2, event.acceleration.y * 2, event.acceleration.z* 2 );
+			}, true);
+		} else {
+			window.addEventListener('MozOrientation', function(orientation) {				
+				_o.trackMotion( orientation.x * 50, orientation.y * 50, orientation.z * 50 );
+			}, true);
+		}
+	};
+
+	_o.listenForMotion();
 
 // SHIVS/SHIMS
 
