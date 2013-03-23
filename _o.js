@@ -610,30 +610,60 @@ _o.touchEnd = function( e ){
 	//SOUND
 	//
 	// get the user's microphone
-	// 
-	_o.hasMicrophone = false;
+	// 	
+	_o.microphone = {
+		isActive: false,
+		source: null,
+		volume: 0,
+		analyser: null
+	};
 
 	_o.getMicrophone = function( callback ){
 		if( !_o.audio ){
 			_o.createAudio();
 		}	
 		var success = function( stream ){
-			_o.hasMicrophone = true;
-			var micSource = _o.audio.ctx.createMediaStreamSource( stream );			
+			_o.microphone.isActive = true;
+			_o.microphone.source = _o.audio.ctx.createMediaStreamSource( stream );			
 			if( typeof callback === "function" ){
-				callback( micSource );
+				callback( o.microphone.source );
 			}
 		}
 		var failure = function( error ){
 			throw new Error( error );
 		}
-		if( _o.browser.getUserMediaSupport === true ){
-			navigator.getUserMedia( { audio: true }, success, failure );
-		} else if( _o.browser.getUserMediaSupport === "webkit" ){
-			navigator.webkitGetUserMedia( { audio: true }, success, failure );
+		if( !_o.microphone.isActive ){
+			if( _o.browser.getUserMediaSupport === true ){
+				navigator.getUserMedia( { audio: true }, success, failure );
+			} else if( _o.browser.getUserMediaSupport === "webkit" ){
+				navigator.webkitGetUserMedia( { audio: true }, success, failure );
+			}
+		} else {
+			if( typeof callback === "function" ){
+				callback( o.microphone.source );
+			}
 		}
 	};
 	
+	//GET FREQUENCY BANDS POWER
+	//
+	// optional: 
+	// a number of bands to get
+	// low and high bounds of the audio to analyse
+	_o.getFrequencyBands = function( number, low, high ){
+		if( !_o.microphone.analyser ){
+			_o.getMicrophone();
+			_o.microphone.analyser = _o.audio.ctx.createAnalyser();
+			_o.microphone.source.connect( _o.microphone.analyser );
+		}
+
+	};
+
+	//GET MICROPHONE TOTAL VOLUME
+	_o.getMicrophoneVolume = function(){
+		return _o.getFrequencyBands( 1, 20, 20000 );
+	};
+
 	//VIDEO
 	//
 	// get the user's webcam
@@ -644,7 +674,8 @@ _o.touchEnd = function( e ){
 		h: 240,
 		ele: document.createElement('video'),
 		movementThreshold: 1000 ,
-		movement: new _o.vec( 0 , 0 )
+		movement: new _o.vec( 0 , 0 ),
+		src: null
 	};
 
 	_o.getCamera = function( callback ){
@@ -660,7 +691,7 @@ _o.touchEnd = function( e ){
 			} else if( _o.browser.getUserMediaSupport === true ){
 				src = cam;
 			}
-
+			_o.webcam.src = src;
 			_o.webcam.ele.src = src;
 			_o.webcam.ele.play();
 			
