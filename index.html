@@ -15,19 +15,47 @@
 			list-style-position: inside;
 			list-style-type: square;
 		}
+		#info{
+			position: fixed;
+			top: -100%;
+			left: 0;
+			width: 100%;
+			padding: 1.5em;
+			height: 100%;			
+			background: rgba( 200, 200, 200, 0.3 );
+			cursor: pointer;
+		}
+		#info h1{
+			position: absolute;
+			bottom: 0;
+		}
+			#info h1:after{
+				content: ' \25BC';
+			}
+		#info:hover{
+			top: 0;
+			height: auto;
+		}
+			#info:hover h1{
+				position: static;
+			}
+				#info:hover h1:after{
+					content: ' \25B2'	;
+				}
 	</style>
 </head>
 <body>
-	
-	<h1>_o.js info</h1>
+	<div id="info">
+		<h1>_o.js info</h1>
 
-	<h2>Version</h2>
-	_o.js v <span id="version-number"></span>
-	
-	<h2>Feature Support</h2>
-	<ul id="support"></ul>	
+		<h2>Version</h2>
+		_o.js v <span id="version-number"></span>
+		
+		<h2>Feature Support</h2>
+		<ul id="support"></ul>	
 
-	<div id="console">
+		<div id="console">
+		</div>
 	</div>
 	
 	<script src="_o.js"></script>
