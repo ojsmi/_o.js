@@ -143,7 +143,7 @@ _o.log = _o.pageConsole.log;
 
 	//ABS
 	//absolute value, taken from: http://www.soundstep.com/blog/experiments/jsdetection/js/app.js
-	_o.abs = function( value ) {		
+	_o.abs = function( value ) {
 		return (value ^ (value >> 31)) - (value >> 31);
 	}
 
@@ -245,7 +245,7 @@ _o.vec.prototype = {
 		_o.pMouse.down = _o.mouse.down;
 		_o.mouse.down = true;
 	};
-	_o.mouseUp = function(e){	
+	_o.mouseUp = function(e){
 		_o.pMouse.down = _o.mouse.down;
 		_o.mouse.down = false;
 	};
@@ -264,7 +264,7 @@ _o.vec.prototype = {
         "186": ";", "187": "=", "188": ",", "189": "-", "190": ".", "191": "/", "192": "`", "219": "[", "220": "\\", "221": "]","222": "'"
     };
     _o.keys.listByName = {
-        "0": 48, "1": 49, "2": 50, "3": 51, "4": 52, "5": 53, "6": 54, "7": 55, "8": 56, "9": 57,        
+        "0": 48, "1": 49, "2": 50, "3": 51, "4": 52, "5": 53, "6": 54, "7": 55, "8": 56, "9": 57,
         "q": 81, "w": 87, "e": 69, "r": 82, "t": 84, "y": 89, "u": 85, "i": 73, "o": 79, "p": 80, "a": 65, "s": 83, "d": 68, "f": 70, "g": 71, "h": 72, "j": 74, "k": 75, "l": 76, "z": 90, "x": 88, "c": 67, "v": 86, "b": 66, "n": 78, "m": 77,
         "[": 219, "]": 221, "-": 189, "=": 187, ";": 186, "'": 222, "\\": 220, "`": 192, ",": 188, ".": 190, "/": 191,
         "backspace": 8, "tab": 9, "enter": 13, "shift": 16, "control": 17, "alt": 18, "meta": 93, "space": 32, "left": 37, "down": 40, "right": 39, "up": 38
@@ -278,8 +278,8 @@ _o.vec.prototype = {
 			var keyAlreadyPressed = false;
 			for( var i = 0; i < _o.keys.pressed.length; i++ ){
 				if( _o.keys.pressed[i] === name ){
-					keyAlreadyPressed = true;					
-				} 								
+					keyAlreadyPressed = true;
+				}
 			}
 			if ( !keyAlreadyPressed ){
 				_o.keys.pressed.push( name );
@@ -291,18 +291,18 @@ _o.vec.prototype = {
 		}
 	};
 
-	_o.keyUp = function( e ){		
+	_o.keyUp = function( e ){
 		var name = _o.keys.listByCode[ e.keyCode ];
 		var indexToRemove = -1;
 		if( _o.keys.pressed.length ){
 			for( var i = 0; i < _o.keys.pressed.length; i++ ){
 				if( _o.keys.pressed[i] === name ){
-					indexToRemove = i;					
-				} 								
+					indexToRemove = i;
+				}
 			}
 			_o.keys.pressed.splice( indexToRemove, 1 );
-		} 	
-		_o.keys.lastUp = name;	
+		}
+		_o.keys.lastUp = name;
 	};
 
 // TOUCH INTERACTION
@@ -328,7 +328,7 @@ _o.trackTouch = function( e ){
 	for( var i = 0; i < e.touches.length; i++ ){
 		var newTouch = e.touches[i];
 		var id = newTouch.identifier;
-		var pTouch;		
+		var pTouch;
 		if( _o.touches[id] ){
 			_o.touches[id].pTouch.x = _o.touches[id].touch.x;
 			_o.touches[id].pTouch.y = _o.touches[id].touch.y;
@@ -346,7 +346,7 @@ _o.trackTouch = function( e ){
 			_o.touches[id].pTouch.target = newTouch.target;
 			_o.touches[id].touch.x = newTouch.pageX;
 			_o.touches[id].touch.y = newTouch.pageY;
-			_o.touches[id].touch.target = newTouch.target;			
+			_o.touches[id].touch.target = newTouch.target;
 		}
 
 	}
@@ -356,16 +356,16 @@ _o.touchEnd = function( e ){
 	if( _o.TOUCH_OVERRIDE_DEFAULT ){
 		e.preventDefault();
 	}
-	
+
 	var changedTouches = e.changedTouches;
 
 	for( var i = 0; i < changedTouches.length; i++ ){
-		var id = changedTouches[i].identifier;		
-		for( var touchId in _o.touches){						
-			if( touchId == id ){		
-				delete _o.touches[id];	
+		var id = changedTouches[i].identifier;
+		for( var touchId in _o.touches){
+			if( touchId == id ){
+				delete _o.touches[id];
 			}
-		}		
+		}
 	}
 };
 
@@ -436,7 +436,7 @@ _o.touchEnd = function( e ){
 	_o.createCanvas = function( width, height ){
 		var canvas = {};
 
-		canvas.canvas 			= 	document.createElement( 'canvas' );						
+		canvas.canvas 			= 	document.createElement( 'canvas' );
 		//set the size - default to the sizes of the window
 		canvas.canvas.width		=	width || window.innerWidth;
 		canvas.canvas.height 	=	height || window.innerHeight;
@@ -462,21 +462,21 @@ _o.touchEnd = function( e ){
 
 	_o.trackMouseOnCanvasses = function(){
 		for( var i = 0; i < _o.canvasses.length; i++ ){
-			var this_canvas = _o.canvasses[i];			
+			var this_canvas = _o.canvasses[i];
 			var canvas_mouse_x = _o.mouse.x - this_canvas.canvas.offsetLeft;
 			var canvas_mouse_y = _o.mouse.y - this_canvas.canvas.offsetTop;
 
 			this_canvas.pMouse.x = this_canvas.mouse.x;
 			this_canvas.pMouse.y = this_canvas.mouse.y;
 
-			this_canvas.mouse.x = ( canvas_mouse_x  >= 0 && canvas_mouse_x  <= this_canvas.w ) ? canvas_mouse_x : -1;			
-			this_canvas.mouse.y = ( canvas_mouse_y  >= 0 && canvas_mouse_y  <= this_canvas.h ) ? canvas_mouse_y : -1;	
+			this_canvas.mouse.x = ( canvas_mouse_x  >= 0 && canvas_mouse_x  <= this_canvas.w ) ? canvas_mouse_x : -1;
+			this_canvas.mouse.y = ( canvas_mouse_y  >= 0 && canvas_mouse_y  <= this_canvas.h ) ? canvas_mouse_y : -1;
 		}
 	};
 
 	// A FRAME RATE/DRAWER
 	// 
-	// overwrite _o.draw to have our code executed every frame	
+	// overwrite _o.draw to have our code executed every frame
 	_o.isLooping = false;
 	_o.loop = function(){
 		if( !_o.isLooping ){
@@ -493,21 +493,21 @@ _o.touchEnd = function( e ){
 	//
 	//preloads images
 	//takes array of image sources
-	//returns array of objects containing the image src and the image 
-	_o.loadImages = function( sources, callback ){	
+	//returns array of objects containing the image src and the image
+	_o.loadImages = function( sources, callback ){
 		var loadCount = 0;
 		var loadAim = sources.length;
-		var images = []; 			
+		var images = [];
 		if( loadAim > 0 ){
-			for( var i = 0; i < loadAim; i++ ){		
+			for( var i = 0; i < loadAim; i++ ){
 				//construct the object we will return
 				images[i] = {
 					src : sources[i],
 					image : new Image()
 				};	
 				//actions to fire when this image is loaded
-				images[i].image.onload = function(){										
-					loadCount++;					
+				images[i].image.onload = function(){
+					loadCount++;
 					if( loadCount === loadAim && typeof callback === 'function' ){
 						//all loaded, fire the callback - pass it our images
 						callback( images );
@@ -528,7 +528,7 @@ _o.touchEnd = function( e ){
 		//setup a temp canvas
 		this.tempC = document.createElement( 'canvas' );
 		this.tempC.width = image.width;
-		this.tempC.height = image.height;	
+		this.tempC.height = image.height;
 		this.tempCtx = this.tempC.getContext( '2d' );
 		//draw image to this
 		this.tempCtx.drawImage( image, 0, 0 , image.width, image.height );
@@ -543,14 +543,14 @@ _o.touchEnd = function( e ){
 	// creates and returns an audio context
 	// normalises the webkit prefix
 	// returns empty object if no audio touchSupport
-	_o.createAudio = function( ){		
+	_o.createAudio = function( ){
 		if( !_o.audio ){
 			_o.audio = {};
 			if ( _o.browser.webAudioSupport === true ) {
 				_o.audio.ctx = new AudioContext();
 			} else if ( _o.browser.webAudioSupport === "webkit" ) {
 				_o.audio.ctx = new webkitAudioContext();
-			} 
+			}
 		}
 		return _o.audio;
 	};
@@ -562,20 +562,20 @@ _o.touchEnd = function( e ){
 	// optional: arrayPosition to allow _o.loadSounds to retain array order of loaded sounds
 	// returns object containing the sound src and an arraybuffer containing the sound 
 	_o.loadSound = function( source, callback, arrayPosition ){
-		var sound = { 
+		var sound = {
 				src: source,
-				arraybuffer: null 
+				arraybuffer: null
 			};
 		var request = new XMLHttpRequest();
 		request.open("GET", source, true );
-		request.responseType = "arraybuffer";				
-		request.onload = function( data ){											
+		request.responseType = "arraybuffer";
+		request.onload = function( data ){
 			sound.arraybuffer = request.response;
-			if( typeof callback === 'function' ){								
+			if( typeof callback === 'function' ){
 				callback( sound , arrayPosition);
 			}
 		}
-		request.send();		
+		request.send();
 	};
 
 	// MULTIPLE SOUND LOADER
@@ -612,9 +612,10 @@ _o.touchEnd = function( e ){
 	// get the user's microphone
 	// 	
 	_o.microphone = {
+		isRequested: false,
 		isActive: false,
 		source: null,
-		volume: 0,
+		volume: -100,
 		analyser: null
 	};
 
@@ -626,49 +627,88 @@ _o.touchEnd = function( e ){
 			_o.microphone.isActive = true;
 			_o.microphone.source = _o.audio.ctx.createMediaStreamSource( stream );			
 			if( typeof callback === "function" ){
-				callback( o.microphone.source );
+				callback( _o.microphone.source );
 			}
 		}
 		var failure = function( error ){
 			throw new Error( error );
 		}
-		if( !_o.microphone.isActive ){
+		if( !_o.microphone.isActive && !_o.microphone.isRequested ){
+			_o.microphone.isRequested = true;
 			if( _o.browser.getUserMediaSupport === true ){
 				navigator.getUserMedia( { audio: true }, success, failure );
 			} else if( _o.browser.getUserMediaSupport === "webkit" ){
 				navigator.webkitGetUserMedia( { audio: true }, success, failure );
 			}
 		} else {
-			if( typeof callback === "function" ){
-				callback( o.microphone.source );
+			if( typeof callback === "function" && _o.microphone.isActive ){
+				callback( _o.microphone.source );
 			}
 		}
 	};
-	
+
 	//GET FREQUENCY BANDS POWER
 	//
-	// optional: 
+	// optional:
 	// a number of bands to get
 	// low and high bounds of the audio to analyse
-	_o.getFrequencyBands = function( number, low, high ){
-		if( !_o.microphone.analyser ){
-			_o.getMicrophone();
-			_o.microphone.analyser = _o.audio.ctx.createAnalyser();
-			_o.microphone.source.connect( _o.microphone.analyser );
-		}
+	_o.getFrequencyBands = function( _number, _low, _high ){
+		var run = function(){
+			var number = _number || 3;
+			var low = _low || 0;
+			var high = _high || _o.audio.sampleRate;
+			var fftBandCount = _o.microphone.analyser.frequencyBinCount;
+			var fftBandSize = _o.audio.ctx.sampleRate / fftBandCount;
+			var lowBand = Math.floor( low / fftBandSize );
+			var highBand = Math.ceil( high / fftBandSize );
+			var calculatedBandCount = highBand - lowBand;
+			var returnBandSize = Math.round( calculatedBandCount / number );
+			var fftBands = new Float32Array( fftBandCount );
+			_o.microphone.analyser.getFloatFrequencyData( fftBands );
+			//console.log( fftBands );
+			var bands = [];
 
+			for( var i = lowBand; i < highBand;  i += returnBandSize ){
+				var total = 0;
+				var average;
+				for( var j = i; j < i + returnBandSize - 1; j++ ){
+					total += fftBands[ j ];
+				}
+				average = total / calculatedBandCount;
+				bands[i] = average;
+			}
+			return bands;
+		};
+
+		if( !_o.microphone.analyser ){
+			_o.getMicrophone( function(){
+				_o.microphone.analyser = _o.audio.ctx.createAnalyser();
+				_o.microphone.source.connect( _o.microphone.analyser );
+				var result = run();
+				return result;
+			});
+		} else {
+			var result = run();
+			return result;
+		}
 	};
 
 	//GET MICROPHONE TOTAL VOLUME
 	_o.getMicrophoneVolume = function(){
-		return _o.getFrequencyBands( 1, 20, 20000 );
+		var bands = _o.getFrequencyBands( 1, 20, 14000 );
+		if( bands ){
+			_o.microphone.volume = bands[0];
+		}
+		return _o.microphone.volume;
 	};
 
 	//VIDEO
 	//
 	// get the user's webcam
-	// 
+	//
 	_o.webcam = {
+		isActive: false,
+		requestedCamera: false,
 		steppedThisFrame: false,
 		w: 320,
 		h: 240,
@@ -699,7 +739,7 @@ _o.touchEnd = function( e ){
 				callback( webcam.ele );
 			}
 		}
-		var failure = function( error ){			
+		var failure = function( error ){
 			throw new Error( error );
 		}
 		if( _o.browser.getUserMediaSupport === true ){
@@ -714,14 +754,14 @@ _o.touchEnd = function( e ){
 			if( !_o.webcam.isActive && !_o.webcam.requestedCamera ){
 				_o.webcam.requestedCamera = true;
 				_o.getCamera();
-			} 
-			if( _o.webcam.isActive ){				
+			}
+			if( _o.webcam.isActive ){
 				if( !_o.webcam.canvas ){
-					_o.webcam.canvas = _o.createCanvas( _o.webcam.w, _o.webcam.h );				
-				}			
+					_o.webcam.canvas = _o.createCanvas( _o.webcam.w, _o.webcam.h );
+				}
 				var c = _o.webcam.canvas;
 				//save previous frame
-				_o.webcam.previousFrame = c.ctx.getImageData( 0, 0, c.w, c.h );	
+				_o.webcam.previousFrame = c.ctx.getImageData( 0, 0, c.w, c.h );
 				//flip cam
 				c.ctx.save();
 				c.ctx.translate( c.w, 0 );
@@ -729,10 +769,10 @@ _o.touchEnd = function( e ){
 				//draw cam
 				c.ctx.drawImage( _o.webcam.ele, 0, 0, c.w, c.h );
 				_o.webcam.currentFrame = c.ctx.getImageData( 0, 0, c.w, c.h );
-			
+
 				c.ctx.restore();
 
-			} 
+			}
 
 			_o.webcam.steppedThisFrame = true;
 		}
@@ -742,7 +782,7 @@ _o.touchEnd = function( e ){
 	_o.frameDifference = function( _blockCountX, _blockCountY ){
 		//get current frame before running analysis
 		_o.stepCamera();
-		
+
 		var previousFrame = _o.webcam.previousFrame;
 		var currentFrame = _o.webcam.currentFrame;
 		var frameWidth = currentFrame.width;
@@ -753,7 +793,7 @@ _o.touchEnd = function( e ){
 		var blockWidth = frameWidth / blockCountX;
 		var blockHeight = frameHeight / blockCountY;
 		var pixelCount = frameWidth * frameHeight;
-		var movementByBlock = [];		
+		var movementByBlock = [];
 		var mostMovement = {
 			value: 0,
 			index: 0,
@@ -761,9 +801,9 @@ _o.touchEnd = function( e ){
 		};
 
 
-		var currentBlock = 0; 			
+		var currentBlock = 0;
 		for ( var i = 0; i < frameWidth; i += blockWidth ){
-			for ( var j = 0; j < frameHeight; j += blockHeight ){    
+			for ( var j = 0; j < frameHeight; j += blockHeight ){
 				var blockMovement = _o.areaDifference( i, j, blockWidth, blockHeight );
 				movementByBlock[ currentBlock ] = blockMovement;
 				if( blockMovement > mostMovement.value ){
@@ -775,7 +815,7 @@ _o.touchEnd = function( e ){
 			}
 		}
 		_o.webcam.movement = new _o.vec( mostMovement.location.x, mostMovement.location.y );	
-		return mostMovement;		
+		return mostMovement;
 	}
 
 
@@ -785,13 +825,13 @@ _o.touchEnd = function( e ){
 	//		topLeftX: 0,
 	//		topLeftY: 0,
 	//		width: 0,
-	//		height	
+	//		height
 	//	}
-	_o.customDifference = function( _areas ){		
+	_o.customDifference = function( _areas ){
 		//get current frame before running analysis
-		_o.stepCamera();	
+		_o.stepCamera();
 
-		var movementByArea = [];		
+		var movementByArea = [];
 		var mostMovement = {
 			value: 0,
 			index: 0,
@@ -816,7 +856,7 @@ _o.touchEnd = function( e ){
 	_o.areaDifference = function( _topLeftX, _topLeftY, _areaWidth, _areaHeight ){
 		var previousFrame = _o.webcam.previousFrame;
 		var currentFrame = _o.webcam.currentFrame;
-		var blockMovement = 0;	
+		var blockMovement = 0;
 		if( previousFrame && currentFrame ){
 			var currentRGBA = currentFrame.data;
 			var previousRGBA = previousFrame.data;
@@ -825,17 +865,16 @@ _o.touchEnd = function( e ){
 			var topLeftY = _topLeftY;
 			var areaWidth = _areaWidth;
 			var areaHeight = _areaHeight;
-					
 
 			for ( var k = topLeftX; k < topLeftX + areaWidth; k++ ) {
 				for ( var l = topLeftY; l < topLeftY + areaHeight; l++ ) {
 					var pos = (k + ( frameWidth * l )) * 4; //canvas gives us rgba values in px array
-					var currColour = currentRGBA[pos] + currentRGBA[pos+1] + currentRGBA[pos+2] / 3;						
-					var prevColour = previousRGBA[pos] + previousRGBA[pos+1] + previousRGBA[pos+2] / 3;                
-					var diff = _o.abs( currColour - prevColour );            
-					blockMovement += diff;                						
+					var currColour = currentRGBA[pos] + currentRGBA[pos+1] + currentRGBA[pos+2] / 3;
+					var prevColour = previousRGBA[pos] + previousRGBA[pos+1] + previousRGBA[pos+2] / 3;
+					var diff = _o.abs( currColour - prevColour );
+					blockMovement += diff;
 				}
-			}		
+			}
 		}
 		return blockMovement;
 	}
@@ -859,12 +898,12 @@ _o.touchEnd = function( e ){
 				green: 0,
 				blue: 0,
 				brightness: 0
-			};			
+			};
 			for( var i = 0; i < pixelCount; i += resolution ){
 				var loc = i * 4;
 				total.red += pixels[ loc ]; 
 				total.green += pixels[ loc + 1 ];
-				total.blue += pixels[ loc + 2 ]; 
+				total.blue += pixels[ loc + 2 ];
 				total.brightness += total.red + total.green + total.blue / 3;
 			}
 			average.red = Math.round(total.red / pixelCount);
@@ -916,15 +955,15 @@ _o.touchEnd = function( e ){
 
 	_o.listenForMotion = function(){
 		if (window.DeviceOrientationEvent) {
-			window.addEventListener('deviceorientation', function(event) {				
+			window.addEventListener('deviceorientation', function(event) {
 				_o.trackMotion( event.beta, event.gamma, event.alpha );
 			}, true);
 		} else if (window.DeviceMotionEvent) {
-			window.addEventListener('devicemotion', function(event) {				
+			window.addEventListener('devicemotion', function(event) {
 				_o.trackMotion(event.acceleration.x * 2, event.acceleration.y * 2, event.acceleration.z* 2 );
 			}, true);
 		} else {
-			window.addEventListener('MozOrientation', function(orientation) {				
+			window.addEventListener('MozOrientation', function(orientation) {
 				_o.trackMotion( orientation.x * 50, orientation.y * 50, orientation.z * 50 );
 			}, true);
 		}
@@ -938,11 +977,11 @@ _o.touchEnd = function( e ){
 	// SEE: http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 	requestAnimationFrame = (function(){
 
-		return	window.requestAnimationFrame       || 
-				window.webkitRequestAnimationFrame || 
-				window.mozRequestAnimationFrame    || 
-				window.oRequestAnimationFrame      || 
-				window.msRequestAnimationFrame     || 
+		return	window.requestAnimationFrame       ||
+				window.webkitRequestAnimationFrame ||
+				window.mozRequestAnimationFrame    ||
+				window.oRequestAnimationFrame      ||
+				window.msRequestAnimationFrame     ||
 				function( callback ){ //fallback to setTimeout
 					window.setTimeout(callback, 1000 / 60);
 				};
