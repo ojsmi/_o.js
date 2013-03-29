@@ -26,7 +26,7 @@
 // SETUP
 
 	var _o = {
-		VERSION: '0.0.10',
+		VERSION: '0.0.12',
 		DEBUG : false
 	};
 
@@ -456,6 +456,16 @@ _o.touchEnd = function( e ){
 		return canvas;
 	};
 
+	// RESIZE CANVAS
+	//
+	// resize the canvas
+	_o.resizeCanvas = function( canvas, newWidth, newHeight ){
+		canvas.canvas.width		=	newWidth;
+		canvas.canvas.height 	=	newHeight;
+		canvas.w 				=	canvas.canvas.width;
+		canvas.h 				=	canvas.canvas.height;
+	};
+
 	// TRACK MOUSE ON CANVASSES
 	//
 	// provides us with a mouse position & previous mouse position mapped to each canvas we have created
@@ -649,6 +659,8 @@ _o.touchEnd = function( e ){
 
 	//GET FREQUENCY BANDS POWER
 	//
+	// normalised to between 0 and 1
+	//
 	// optional:
 	// a number of bands to get
 	// low and high bounds of the audio to analyse
@@ -665,7 +677,7 @@ _o.touchEnd = function( e ){
 			var returnBandSize = Math.round( calculatedBandCount / number );
 			var fftBands = new Float32Array( fftBandCount );
 			_o.microphone.analyser.getFloatFrequencyData( fftBands );
-			//console.log( fftBands );
+	
 			var bands = [];
 
 			for( var i = lowBand; i < highBand;  i += returnBandSize ){
@@ -675,7 +687,7 @@ _o.touchEnd = function( e ){
 					total += fftBands[ j ];
 				}
 				average = total / calculatedBandCount;
-				bands[i] = average;
+				bands[i] = _o.mapValue( average, _o.microphone.analyser.minDecibels, _o.microphone.analyser.maxDecibels, 0, 1 );
 			}
 			return bands;
 		};
@@ -861,10 +873,10 @@ _o.touchEnd = function( e ){
 			var currentRGBA = currentFrame.data;
 			var previousRGBA = previousFrame.data;
 			var frameWidth = currentFrame.width;
-			var topLeftX = _topLeftX;
-			var topLeftY = _topLeftY;
-			var areaWidth = _areaWidth;
-			var areaHeight = _areaHeight;
+			var topLeftX = Math.round( _topLeftX );
+			var topLeftY = Math.round( _topLeftY );
+			var areaWidth = Math.round( _areaWidth );
+			var areaHeight = Math.round( _areaHeight );
 
 			for ( var k = topLeftX; k < topLeftX + areaWidth; k++ ) {
 				for ( var l = topLeftY; l < topLeftY + areaHeight; l++ ) {
