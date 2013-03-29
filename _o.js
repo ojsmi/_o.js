@@ -26,7 +26,7 @@
 // SETUP
 
 	var _o = {
-		VERSION: '0.0.12',
+		VERSION: '0.0.13',
 		DEBUG : false
 	};
 
@@ -59,8 +59,6 @@ _o.browser.getUserMediaSupport = (function() {
 
 // DEBUGGER
 // show debug info in an element on the page - useful for mobile dev.
-
-
 _o.pageConsole = function( ele  ){
 	var title = document.createElement('h1');
 	title.innerHTML = 'DEBUG HERE:';
@@ -146,6 +144,15 @@ _o.log = _o.pageConsole.log;
 	_o.abs = function( value ) {
 		return (value ^ (value >> 31)) - (value >> 31);
 	}
+
+	// DEGREE / RADIANS CONVERSION
+	// 2 functions to convert between degrees and radians
+	_o.d2r = function( deg ){
+		return deg * ( Math.PI / 180 );
+		};
+	_o.r2d = function( rad ){
+		return rad * ( 180 / Math.PI );
+	};
 
 // VECTORS
 // basic 2d vector class, courtesy L A Watts...
