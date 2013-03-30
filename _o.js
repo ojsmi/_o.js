@@ -26,7 +26,7 @@
 // SETUP
 
 	var _o = {
-		VERSION: '0.0.13',
+		VERSION: '0.0.14',
 		DEBUG : false
 	};
 
@@ -118,6 +118,17 @@ _o.log = _o.pageConsole.log;
 	//
 	_o.mapValue = function( val, origMin, origMax, newMin, newMax ){
 		return newMin + ( newMax - newMin ) * ( ( val - origMin ) / ( origMax - origMin ) );
+	};
+
+	// MAP VALUE & CLAMP TO NEW RANGE
+	//
+	// functions like _o.mapValue, but clamps to new range
+	//
+	_o.clampValue = function( val, origMin, origMax, newMin, newMax ){
+		var low = ( newMin > newMax ) ? newMax : newMin;
+		var high = ( newMin > newMax ) ? newMin : newMax;
+		var result = low + ( high - low ) * ( ( val - origMin ) / ( origMax - origMin ) );
+		return ( result > high ) ? high : (result < low ) ? low : result;		
 	};
 
 	// RANDOM RANGE
