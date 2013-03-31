@@ -471,6 +471,10 @@ _o.touchEnd = function( e ){
 		//add this to our list
 		_o.canvasses.push( canvas );
 
+		window.addEventListener('resize', function() {
+			_o.resizeCanvas( canvas, window.innerWidth, window.innerHeight );
+		});
+
 		return canvas;
 	};
 
