@@ -1,0 +1,5 @@
+#About
+
+_o.js is a small javascript helper library. It's aimed at helping with canvas and audio, as well as some simple microphone and camera based interacitons. It's currently being built up as projects require.
+
+Currently it's badly documented, but most functions have an explanatory line or two of commments.
