@@ -23,8 +23,8 @@
 
 (function( global ){
 
-// SETUP
 
+// SETUP
 	var _o = {
 		VERSION: '0.0.14',
 		DEBUG : false
@@ -35,6 +35,8 @@
 	} else {
 		global._o = _o;
 	}
+
+
 // FEATURE DETECTION
 // This is pretty bare bones - for more, use Modernizr ( where some of this comes from... )
 _o.browser = {};
@@ -108,6 +110,7 @@ if( _o.DEBUG ){
 //convenience
 _o.log = _o.pageConsole.log;
 
+
 // UTILS
 
 	// MAP VALUE
@@ -164,6 +167,7 @@ _o.log = _o.pageConsole.log;
 	_o.r2d = function( rad ){
 		return rad * ( 180 / Math.PI );
 	};
+
 
 // VECTORS
 // basic 2d vector class, courtesy L A Watts...
@@ -268,6 +272,7 @@ _o.vec.prototype = {
 		_o.mouse.down = false;
 	};
 
+
 // KEYBOARD INTERACTION
 //
 // map of keys by code and by name - done to a Mac keyboard	
@@ -322,6 +327,7 @@ _o.vec.prototype = {
 		}
 		_o.keys.lastUp = name;
 	};
+
 
 // TOUCH INTERACTION
 // store touches as an object literal, indexed by ID.
@@ -386,6 +392,7 @@ _o.touchEnd = function( e ){
 		}
 	}
 };
+
 
 // ADD LISTENERS
 // 
@@ -631,6 +638,7 @@ _o.touchEnd = function( e ){
 			}
 		}
 	};
+
 
 // INPUT & ANALYSIS
 	// GET USER MEDIA
@@ -1001,6 +1009,7 @@ _o.touchEnd = function( e ){
 
 	_o.listenForMotion();
 
+
 // SHIVS/SHIMS
 
 	// REQUEST ANIMATION FRAME
@@ -1018,9 +1027,9 @@ _o.touchEnd = function( e ){
 
 	})();
 
+
 // END _o.
 
 })( typeof window === 'undefined' ? this : window );
-
 
 // END
