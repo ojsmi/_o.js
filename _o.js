@@ -47,7 +47,7 @@ _o.browser.canvasSupport = (function(){
 })();
 
 _o.browser.webAudioSupport = (function(){
-	return ( typeof AudioContext === "function" ) ? true : ( typeof webkitAudioContext === "function" ) ? 'webkit' : false;
+	return ( window.AudioContext ) ? true : ( window.webkitAudioContext ) ? 'webkit' : false;
 })();
 
 _o.browser.touchSupport = (function() {
@@ -55,7 +55,7 @@ _o.browser.touchSupport = (function() {
 })();
 
 _o.browser.getUserMediaSupport = (function() {
-    return ( typeof navigator.GetUserMedia === "function" ) ? true : ( typeof navigator.webkitGetUserMedia === "function" ) ? 'webkit' : false;
+    return ( navigator.GetUserMedia ) ? true : ( navigator.webkitGetUserMedia ) ? 'webkit' : false;
 })();
 
 
