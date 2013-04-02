@@ -26,7 +26,7 @@
 
 // SETUP
 	var _o = {
-		VERSION: '0.0.14',
+		VERSION: '0.0.15',
 		DEBUG : false
 	};
 
@@ -105,7 +105,7 @@ _o.pageConsole.log = function( info ){
 //if we're running debug mode, then show this console thing
 if( _o.DEBUG ){
 	_o.pageConsole();
-};
+}
 
 //convenience
 _o.log = _o.pageConsole.log;
@@ -131,7 +131,7 @@ _o.log = _o.pageConsole.log;
 		var low = ( newMin > newMax ) ? newMax : newMin;
 		var high = ( newMin > newMax ) ? newMin : newMax;
 		var result = low + ( high - low ) * ( ( val - origMin ) / ( origMax - origMin ) );
-		return ( result > high ) ? high : (result < low ) ? low : result;		
+		return ( result > high ) ? high : (result < low ) ? low : result;
 	};
 
 	// RANDOM RANGE
@@ -157,7 +157,7 @@ _o.log = _o.pageConsole.log;
 	//absolute value, taken from: http://www.soundstep.com/blog/experiments/jsdetection/js/app.js
 	_o.abs = function( value ) {
 		return (value ^ (value >> 31)) - (value >> 31);
-	}
+	};
 
 	// DEGREE / RADIANS CONVERSION
 	// 2 functions to convert between degrees and radians
@@ -178,22 +178,22 @@ _o.vec2D = function( x, y ){
 };
 
 _o.vec2D.prototype = {
-  copyFrom: function( vect ){
-	this.x = vect.x;
-	this.y = vect.y;
-  },
-  plus: function( vect ){
-	this.x += vect.x;
-	this.y += vect.y;
-  },
-  equals: function( vect ){
-	this.x = vect.x;
-	this.y = vect.y;
-  },
-  mult: function( val ){
-  	this.x *= val;
-  	this.y *= val;
-  }
+	copyFrom: function( vect ){
+		this.x = vect.x;
+		this.y = vect.y;
+	},
+	plus: function( vect ){
+		this.x += vect.x;
+		this.y += vect.y;
+	},
+	equals: function( vect ){
+		this.x = vect.x;
+		this.y = vect.y;
+	},
+	mult: function( val ){
+		this.x *= val;
+		this.y *= val;
+	}
 };
 
 // VECTORS
@@ -205,26 +205,26 @@ _o.vec = function( x, y, z ){
 };
 
 _o.vec.prototype = {
-  copyFrom: function( vect ){
-	this.x = vect.x;
-	this.y = vect.y;
-	this.z = vect.z;
-  },
-  plus: function( vect ){
-	this.x += vect.x;
-	this.y += vect.y;
-	this.z += vect.z;
-  },
-  equals: function( vect ){
-	this.x = vect.x;
-	this.y = vect.y;
-	this.z = vect.z;
-  },
-  mult: function( val ){
-  	this.x *= val;
-  	this.y *= val;
-  	this.z *= val;
-  }
+	copyFrom: function( vect ){
+		this.x = vect.x;
+		this.y = vect.y;
+		this.z = vect.z;
+	},
+	plus: function( vect ){
+		this.x += vect.x;
+		this.y += vect.y;
+		this.z += vect.z;
+	},
+	equals: function( vect ){
+		this.x = vect.x;
+		this.y = vect.y;
+		this.z = vect.z;
+	},
+	mult: function( val ){
+		this.x *= val;
+		this.y *= val;
+		this.z *= val;
+	}
 };
 
 // MOUSE INTERACTION
@@ -263,11 +263,11 @@ _o.vec.prototype = {
 	//
 	// is a mouse button pressed
 	// TODO: detect which button it is
-	_o.mouseDown = function(){
+	_o.mouseDown = function( ){
 		_o.pMouse.down = _o.mouse.down;
 		_o.mouse.down = true;
 	};
-	_o.mouseUp = function(e){
+	_o.mouseUp = function( ){
 		_o.pMouse.down = _o.mouse.down;
 		_o.mouse.down = false;
 	};
@@ -352,7 +352,6 @@ _o.trackTouch = function( e ){
 	for( var i = 0; i < e.touches.length; i++ ){
 		var newTouch = e.touches[i];
 		var id = newTouch.identifier;
-		var pTouch;
 		if( _o.touches[id] ){
 			_o.touches[id].pTouch.x = _o.touches[id].touch.x;
 			_o.touches[id].pTouch.y = _o.touches[id].touch.y;
@@ -364,7 +363,6 @@ _o.trackTouch = function( e ){
 			_o.touches[id] = {};
 			_o.touches[id].pTouch = {};
 			_o.touches[id].touch = {};
-
 			_o.touches[id].pTouch.x = newTouch.pageX;
 			_o.touches[id].pTouch.y = newTouch.pageY;
 			_o.touches[id].pTouch.target = newTouch.target;
@@ -386,7 +384,7 @@ _o.touchEnd = function( e ){
 	for( var i = 0; i < changedTouches.length; i++ ){
 		var id = changedTouches[i].identifier;
 		for( var touchId in _o.touches){
-			if( touchId == id ){
+			if( touchId === id ){
 				delete _o.touches[id];
 			}
 		}
@@ -447,7 +445,7 @@ _o.touchEnd = function( e ){
 	_o.addListeners();
 
 
-// AUDIOVISUAL	
+// AUDIOVISUAL
 
 	//we keep a list of canvasses for reference & for mouse tracking
 	_o.canvasses = [];
@@ -461,13 +459,13 @@ _o.touchEnd = function( e ){
 	_o.createCanvas = function( width, height ){
 		var canvas = {};
 
-		canvas.canvas 			= 	document.createElement( 'canvas' );
+		canvas.canvas			=	document.createElement( 'canvas' );
 		//set the size - default to the sizes of the window
 		canvas.canvas.width		=	width || window.innerWidth;
-		canvas.canvas.height 	=	height || window.innerHeight;
+		canvas.canvas.height	=	height || window.innerHeight;
 		//these are just for convenience
-		canvas.w 				=	canvas.canvas.width;
-		canvas.h 				=	canvas.canvas.height;
+		canvas.w				=	canvas.canvas.width;
+		canvas.h				=	canvas.canvas.height;
 		//could add options for webGL context but realistically that's getting handled by three.js
 		canvas.ctx				=	canvas.canvas.getContext( '2d' );
 
@@ -486,9 +484,9 @@ _o.touchEnd = function( e ){
 	// resize the canvas
 	_o.resizeCanvas = function( canvas, newWidth, newHeight ){
 		canvas.canvas.width		=	newWidth;
-		canvas.canvas.height 	=	newHeight;
-		canvas.w 				=	canvas.canvas.width;
-		canvas.h 				=	canvas.canvas.height;
+		canvas.canvas.height	=	newHeight;
+		canvas.w				=	canvas.canvas.width;
+		canvas.h				=	canvas.canvas.height;
 	};
 
 	// TRACK MOUSE ON CANVASSES
@@ -547,7 +545,7 @@ _o.touchEnd = function( e ){
 						//all loaded, fire the callback - pass it our images
 						callback( images );
 					}
-				}
+				};
 				//load the image
 				images[i].image.src = images[i].src;
 			}
@@ -604,12 +602,12 @@ _o.touchEnd = function( e ){
 		var request = new XMLHttpRequest();
 		request.open("GET", source, true );
 		request.responseType = "arraybuffer";
-		request.onload = function( data ){
+		request.onload = function( ){
 			sound.arraybuffer = request.response;
 			if( typeof callback === 'function' ){
 				callback( sound , arrayPosition);
 			}
-		}
+		};
 		request.send();
 	};
 
@@ -622,13 +620,13 @@ _o.touchEnd = function( e ){
 	// relies on _o.loadSound
 	// sends _o.loadSound the optional parameter arrayPosition so that the 
 	// resultant array is the same order as the one passed in.
-	_o.loadSounds = function( sources, callback ){	
-		if( sources && sources.length > 0 ){	
+	_o.loadSounds = function( sources, callback ){
+		if( sources && sources.length > 0 ){
 			var loadCount = 0;
 			var loadAim = sources.length;
-			var sounds = []; 				
-			for( var i = 0; i < loadAim; i++ ){					
-				_o.loadSound( sources[i], function( sound, arrayPosition ){			
+			var sounds = [];
+			for( var i = 0; i < loadAim; i++ ){
+				_o.loadSound( sources[i], function( sound, arrayPosition ){
 					loadCount++;
 					sounds[arrayPosition] = sound;
 					if( loadCount === loadAim && typeof callback === 'function' ){
@@ -646,7 +644,7 @@ _o.touchEnd = function( e ){
 	//SOUND
 	//
 	// get the user's microphone
-	// 	
+	//
 	_o.microphone = {
 		isRequested: false,
 		isActive: false,
@@ -665,10 +663,10 @@ _o.touchEnd = function( e ){
 			if( typeof callback === "function" ){
 				callback( _o.microphone.source );
 			}
-		}
+		};
 		var failure = function( error ){
 			throw new Error( error );
-		}
+		};
 		if( !_o.microphone.isActive && !_o.microphone.isRequested ){
 			_o.microphone.isRequested = true;
 			if( _o.browser.getUserMediaSupport === true ){
@@ -774,12 +772,12 @@ _o.touchEnd = function( e ){
 			_o.webcam.ele.play();
 			
 			if( typeof callback === "function" ){
-				callback( webcam.ele );
+				callback( _o.webcam.ele );
 			}
-		}
+		};
 		var failure = function( error ){
 			throw new Error( error );
-		}
+		};
 		if( _o.browser.getUserMediaSupport === true ){
 			navigator.getUserMedia( { video: true }, success, failure );
 		} else if( _o.browser.getUserMediaSupport === "webkit" ){
@@ -820,17 +818,14 @@ _o.touchEnd = function( e ){
 	_o.frameDifference = function( _blockCountX, _blockCountY ){
 		//get current frame before running analysis
 		_o.stepCamera();
-
-		var previousFrame = _o.webcam.previousFrame;
+		
 		var currentFrame = _o.webcam.currentFrame;
 		var frameWidth = currentFrame.width;
 		var frameHeight = currentFrame.height;
 		var blockCountX = _blockCountX;
 		var blockCountY = _blockCountY;
-		var totalBlocks = blockCountX * blockCountY;
 		var blockWidth = frameWidth / blockCountX;
 		var blockHeight = frameHeight / blockCountY;
-		var pixelCount = frameWidth * frameHeight;
 		var movementByBlock = [];
 		var mostMovement = {
 			value: 0,
@@ -847,14 +842,14 @@ _o.touchEnd = function( e ){
 				if( blockMovement > mostMovement.value ){
 					mostMovement.value = blockMovement;
 					mostMovement.index = currentBlock;
-					mostMovement.location = new _o.vec( i + ( .5* blockWidth ), j + ( .5* blockHeight ) );
+					mostMovement.location = new _o.vec( i + ( 0.5* blockWidth ), j + ( 0.5* blockHeight ) );
 				}
 				currentBlock++;
 			}
 		}
 		_o.webcam.movement = new _o.vec( mostMovement.location.x, mostMovement.location.y );	
 		return mostMovement;
-	}
+	};
 
 
 	//pass in array of custom defined areas
@@ -884,12 +879,12 @@ _o.touchEnd = function( e ){
 			if( areaMovement > mostMovement.value ){
 				mostMovement.value = areaMovement;
 				mostMovement.index = i;
-				mostMovement.location = new _o.vec( area.topLeftX + ( .5* area.width ), area.topLeftY + ( .5* area.height ) );
+				mostMovement.location = new _o.vec( area.topLeftX + ( 0.5* area.width ), area.topLeftY + ( 0.5* area.height ) );
 			}
 		}
 		_o.webcam.movement = new _o.vec( mostMovement.location.x, mostMovement.location.y );
 		return mostMovement;
-	}
+	};
 
 	_o.areaDifference = function( _topLeftX, _topLeftY, _areaWidth, _areaHeight ){
 		var previousFrame = _o.webcam.previousFrame;
@@ -915,7 +910,7 @@ _o.touchEnd = function( e ){
 			}
 		}
 		return blockMovement;
-	}
+	};
 
 	//AVERAGE COLOUR
 	_o.averageColour = function( _pixels, _resolution ){
@@ -950,11 +945,11 @@ _o.touchEnd = function( e ){
 			average.brightness = Math.round(total.brightness / pixelCount);
 		}
 		return average;
-	}
+	};
 
 	//Device APIs
 	_o.motion = {
-		default: { //the technical order
+		original: { //the technical order
 			x: 0,
 			y: 0,
 			z: 0
@@ -965,7 +960,7 @@ _o.touchEnd = function( e ){
 		z: 0
 	};
 	_o.pMotion = {
-		default: {
+		original: {
 			x: 0,
 			y: 0,
 			z: 0
@@ -977,15 +972,15 @@ _o.touchEnd = function( e ){
 
 	// ACCELEROMETER INTERACTION
 	_o.trackMotion = function( x, y, z ){
-		_o.pMotion.default.x = _o.motion.default.x;
-		_o.pMotion.default.y = _o.motion.default.y;
-		_o.pMotion.default.z = _o.motion.default.z;
+		_o.pMotion.original.x = _o.motion.original.x;
+		_o.pMotion.original.y = _o.motion.original.y;
+		_o.pMotion.original.z = _o.motion.original.z;
 		_o.pMotion.x = _o.motion.x;
 		_o.pMotion.y = _o.motion.y;
 		_o.pMotion.z = _o.motion.z;
-		_o.motion.default.x = x;
-		_o.motion.default.y = y;
-		_o.motion.default.z = z;
+		_o.motion.original.x = x;
+		_o.motion.original.y = y;
+		_o.motion.original.z = z;
 		_o.motion.x = y;
 		_o.motion.y = x;
 		_o.motion.z = z;
@@ -1016,11 +1011,11 @@ _o.touchEnd = function( e ){
 	// SEE: http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 	requestAnimationFrame = (function(){
 
-		return	window.requestAnimationFrame       ||
-				window.webkitRequestAnimationFrame ||
-				window.mozRequestAnimationFrame    ||
-				window.oRequestAnimationFrame      ||
-				window.msRequestAnimationFrame     ||
+		return	window.requestAnimationFrame		||
+				window.webkitRequestAnimationFrame	||
+				window.mozRequestAnimationFrame		||
+				window.oRequestAnimationFrame		||
+				window.msRequestAnimationFrame		||
 				function( callback ){ //fallback to setTimeout
 					window.setTimeout(callback, 1000 / 60);
 				};
