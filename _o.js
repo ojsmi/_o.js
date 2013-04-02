@@ -26,7 +26,7 @@
 
 // SETUP
 	var _o = {
-		VERSION: '0.0.15',
+		VERSION: '0.0.16',
 		DEBUG : false
 	};
 
@@ -424,9 +424,13 @@ _o.touchEnd = function( e ){
 		//add this to our list
 		_o.canvasses.push( canvas );
 
-		window.addEventListener('resize', function() {
-			_o.resizeCanvas( canvas, window.innerWidth, window.innerHeight );
-		});
+		// bind a listener to resize with window, 
+		// but only if size hasn't been set explicitly
+		if( !width && !height ){
+			window.addEventListener('resize', function() {
+				_o.resizeCanvas( canvas, window.innerWidth, window.innerHeight );
+			});
+		}
 
 		return canvas;
 	};

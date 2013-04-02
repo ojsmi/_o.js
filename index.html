@@ -75,16 +75,16 @@
 			E_supportList.appendChild( E_li );
 		}
 		
-		var c = _o.createCanvas( window.innerWidth, window.innerHeight );
+		var c = _o.createCanvas();
 		
 		document.body.appendChild( c.canvas );
 		
 		_o.draw = function(){
 			c.ctx.clearRect( 0, 0, c.w, c.h );
-			var vol = _o.mapValue( _o.getMicrophoneVolume(), -100, 0, c.h, 0 );
-			var clr = _o.averageColour();
-			c.ctx.fillStyle = "rgb(" + clr.red + "," + clr.green + ","  + clr.blue +  ")";
-			c.ctx.fillRect( 0, vol, c.w, c.h );
+			// var vol = _o.mapValue( _o.getMicrophoneVolume(), -100, 0, c.h, 0 );
+			// var clr = _o.averageColour();
+			// c.ctx.fillStyle = "rgb(" + clr.red + "," + clr.green + ","  + clr.blue +  ")";
+			// c.ctx.fillRect( 0, vol, c.w, c.h );
 		};
 
 		_o.loop();
