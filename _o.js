@@ -59,58 +59,6 @@ _o.browser.getUserMediaSupport = (function() {
 })();
 
 
-// DEBUGGER
-// show debug info in an element on the page - useful for mobile dev.
-_o.pageConsole = function( ele  ){
-	var title = document.createElement('h1');
-	title.innerHTML = 'DEBUG HERE:';
-	_o.pageConsole.debugList = document.createElement('ul');
-	_o.pageConsole.debugList.style.listStyleType = 'none';
-	if( !ele ){
-		var ele = document.createElement('div');
-		document.body.appendChild( ele );
-	}
-	ele.appendChild( title );
-	ele.appendChild( _o.pageConsole.debugList );
-};
-
-_o.logRecurse = function( info , level ){
-	var toStr = Object.prototype.toString.call( info );
-	var output = '';
-	var this_level = 0;
-	if( level ){
-		this_level = level;
-	}
-	var next_level = this_level + 1;
-	if( toStr === '[object Array]' || toStr === '[object Object]' || toStr === '[object TouchEvent]' || toStr === '[object TouchList]' || toStr === '[object Touch]' ){
-		output += '<br/>';
-		for( var i in info ){
-			for( var j = 0; j < this_level; j++ ){
-				output += "&nbsp;&nbsp;&nbsp;";
-			}
-			output += toStr + ' ->' + i + ' : ' + _o.logRecurse( info[i], next_level ) + '<br/>';
-		}
-	} else {
-		output = info;
-	}
-	return output;
-};
-
-_o.pageConsole.log = function( info ){
-	var li = document.createElement( 'li' );
-	li.innerHTML = _o.logRecurse( info );
-	_o.pageConsole.debugList.appendChild( li );
-};
-
-//if we're running debug mode, then show this console thing
-if( _o.DEBUG ){
-	_o.pageConsole();
-}
-
-//convenience
-_o.log = _o.pageConsole.log;
-
-
 // UTILS
 
 	// MAP VALUE
