@@ -2,7 +2,7 @@
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
+// 'Software'), to deal in the Software without restriction, including
 // without limitation the rights to use, copy, modify, merge, publish,
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
@@ -11,7 +11,7 @@
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 // NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
@@ -223,22 +223,22 @@ _o.vec.prototype = {
 
 // KEYBOARD INTERACTION
 //
-// map of keys by code and by name - done to a Mac keyboard	
+// map of keys by code and by name - done to a Mac keyboard	(UK)
 // TODO: check against other keyboards & layouts
 	_o.keys = {};
 
     _o.keys.listByCode = {
-        "8": "backspace", "9": "tab", "13": "enter", "16": "shift", "17": "control", "18": "alt", "32": "space", "37": "left", "38": "up", "39": "right", "40": "down",
-        "48": "0", "49": "1", "50": "2", "51": "3", "52": "4", "53": "5", "54": "6", "55": "7", "56": "8", "57": "9",
-        "65": "a", "66": "b", "67": "c", "68": "d", "69": "e", "70": "f", "71": "g", "72": "h", "73": "i", "74": "j", "75": "k", "76": "l", "77": "m", "78": "n", "79": "o", "80": "p", "81": "q", "82": "r", "83": "s", "84": "t", "85": "u", "86": "v", "87": "w", "88": "x", "89": "y","90": "z",
-        "91": "meta", "93": "meta",
-        "186": ";", "187": "=", "188": ",", "189": "-", "190": ".", "191": "/", "192": "`", "219": "[", "220": "\\", "221": "]","222": "'"
+        '8': 'backspace', '9': 'tab', '13': 'enter', '16': 'shift', '17': 'control', '18': 'alt', '32': 'space', '37': 'left', '38': 'up', '39': 'right', '40': 'down',
+        '48': '0', '49': '1', '50': '2', '51': '3', '52': '4', '53': '5', '54': '6', '55': '7', '56': '8', '57': '9',
+        '65': 'a', '66': 'b', '67': 'c', '68': 'd', '69': 'e', '70': 'f', '71': 'g', '72': 'h', '73': 'i', '74': 'j', '75': 'k', '76': 'l', '77': 'm', '78': 'n', '79': 'o', '80': 'p', '81': 'q', '82': 'r', '83': 's', '84': 't', '85': 'u', '86': 'v', '87': 'w', '88': 'x', '89': 'y','90': 'z',
+        '91': 'meta', '93': 'meta',
+        '186': ';', '187': '=', '188': ',', '189': '-', '190': '.', '191': '/', '192': '`', '219': '[', '220': '\\', '221': ']','222': '\''
     };
     _o.keys.listByName = {
-        "0": 48, "1": 49, "2": 50, "3": 51, "4": 52, "5": 53, "6": 54, "7": 55, "8": 56, "9": 57,
-        "q": 81, "w": 87, "e": 69, "r": 82, "t": 84, "y": 89, "u": 85, "i": 73, "o": 79, "p": 80, "a": 65, "s": 83, "d": 68, "f": 70, "g": 71, "h": 72, "j": 74, "k": 75, "l": 76, "z": 90, "x": 88, "c": 67, "v": 86, "b": 66, "n": 78, "m": 77,
-        "[": 219, "]": 221, "-": 189, "=": 187, ";": 186, "'": 222, "\\": 220, "`": 192, ",": 188, ".": 190, "/": 191,
-        "backspace": 8, "tab": 9, "enter": 13, "shift": 16, "control": 17, "alt": 18, "meta": 93, "space": 32, "left": 37, "down": 40, "right": 39, "up": 38
+        '0': 48, '1': 49, '2': 50, '3': 51, '4': 52, '5': 53, '6': 54, '7': 55, '8': 56, '9': 57,
+        'q': 81, 'w': 87, 'e': 69, 'r': 82, 't': 84, 'y': 89, 'u': 85, 'i': 73, 'o': 79, 'p': 80, 'a': 65, 's': 83, 'd': 68, 'f': 70, 'g': 71, 'h': 72, 'j': 74, 'k': 75, 'l': 76, 'z': 90, 'x': 88, 'c': 67, 'v': 86, 'b': 66, 'n': 78, 'm': 77,
+        '[': 219, ']': 221, '-': 189, '=': 187, ';': 186, '\'': 222, '\\': 220, '`': 192, ',': 188, '.': 190, '/': 191,
+        'backspace': 8, 'tab': 9, 'enter': 13, 'shift': 16, 'control': 17, 'alt': 18, 'meta': 93, 'space': 32, 'left': 37, 'down': 40, 'right': 39, 'up': 38
     };
 
     _o.keys.pressed = [];
@@ -537,7 +537,7 @@ _o.touchEnd = function( e ){
 			_o.audio = {};
 			if ( _o.browser.webAudioSupport === true ) {
 				_o.audio.ctx = new AudioContext();
-			} else if ( _o.browser.webAudioSupport === "webkit" ) {
+			} else if ( _o.browser.webAudioSupport === 'webkit' ) {
 				_o.audio.ctx = new webkitAudioContext();
 			}
 		}
@@ -556,8 +556,8 @@ _o.touchEnd = function( e ){
 				arraybuffer: null
 			};
 		var request = new XMLHttpRequest();
-		request.open("GET", source, true );
-		request.responseType = "arraybuffer";
+		request.open('GET', source, true );
+		request.responseType = 'arraybuffer';
 		request.onload = function( ){
 			sound.arraybuffer = request.response;
 			if( typeof callback === 'function' ){
@@ -616,7 +616,7 @@ _o.touchEnd = function( e ){
 		var success = function( stream ){
 			_o.microphone.isActive = true;
 			_o.microphone.source = _o.audio.ctx.createMediaStreamSource( stream );			
-			if( typeof callback === "function" ){
+			if( typeof callback === 'function' ){
 				callback( _o.microphone.source );
 			}
 		};
@@ -627,11 +627,11 @@ _o.touchEnd = function( e ){
 			_o.microphone.isRequested = true;
 			if( _o.browser.getUserMediaSupport === true ){
 				navigator.getUserMedia( { audio: true }, success, failure );
-			} else if( _o.browser.getUserMediaSupport === "webkit" ){
+			} else if( _o.browser.getUserMediaSupport === 'webkit' ){
 				navigator.webkitGetUserMedia( { audio: true }, success, failure );
 			}
 		} else {
-			if( typeof callback === "function" && _o.microphone.isActive ){
+			if( typeof callback === 'function' && _o.microphone.isActive ){
 				callback( _o.microphone.source );
 			}
 		}
@@ -727,7 +727,7 @@ _o.touchEnd = function( e ){
 			_o.webcam.ele.src = src;
 			_o.webcam.ele.play();
 			
-			if( typeof callback === "function" ){
+			if( typeof callback === 'function' ){
 				callback( _o.webcam.ele );
 			}
 		};
@@ -736,7 +736,7 @@ _o.touchEnd = function( e ){
 		};
 		if( _o.browser.getUserMediaSupport === true ){
 			navigator.getUserMedia( { video: true }, success, failure );
-		} else if( _o.browser.getUserMediaSupport === "webkit" ){
+		} else if( _o.browser.getUserMediaSupport === 'webkit' ){
 			navigator.webkitGetUserMedia( { video: true }, success, failure );
 		}
 	};
