@@ -330,9 +330,9 @@ _o.touchEnd = function( e ){
 	var changedTouches = e.changedTouches;
 
 	for( var i = 0; i < changedTouches.length; i++ ){
-		var id = changedTouches[i].identifier;
+		var id = parseInt( changedTouches[i].identifier );
 		for( var touchId in _o.touches){
-			if( touchId === id ){
+			if( parseInt(touchId) === id ){
 				delete _o.touches[id];
 			}
 		}
