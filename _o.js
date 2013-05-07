@@ -471,7 +471,7 @@ _o.touchEnd = function( e ){
 		if( !_o.isLooping ){
 			_o.isLooping = true;
 		}
-		_o.webcam.steppedThisFrame = false;
+		
 		if( typeof _o.draw === 'function' ){
 			_o.draw();
 		}				
