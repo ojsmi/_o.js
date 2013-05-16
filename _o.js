@@ -26,7 +26,7 @@
 
 // SETUP
 	var _o = {
-		VERSION: '0.0.16',
+		VERSION: '0.0.17',
 		DEBUG : false
 	};
 
@@ -467,6 +467,7 @@ _o.touchEnd = function( e ){
 	// 
 	// overwrite _o.draw to have our code executed every frame
 	_o.isLooping = false;
+	_o.animFrame = null;
 	_o.loop = function(){
 		if( !_o.isLooping ){
 			_o.isLooping = true;
@@ -475,7 +476,11 @@ _o.touchEnd = function( e ){
 		if( typeof _o.draw === 'function' ){
 			_o.draw();
 		}				
-		requestAnimationFrame( _o.loop );
+		_o.animFrame = requestAnimationFrame( _o.loop );
+	};
+
+	_o.unLoop = function(){
+		cancelAnimationFrame( _o.animFrame );
 	};
 
 	//IMAGE LOADER
@@ -597,19 +602,30 @@ _o.touchEnd = function( e ){
 
 	// REQUEST ANIMATION FRAME
 	// SEE: http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-	requestAnimationFrame = (function(){
+	(function() {
+	    var lastTime = 0;
+	    var vendors = [ 'ms', 'o', 'webkit', 'moz' ];
+	    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+	        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+	        window.cancelAnimationFrame =
+	          window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+	    }
 
-		return	window.requestAnimationFrame		||
-				window.webkitRequestAnimationFrame	||
-				window.mozRequestAnimationFrame		||
-				window.oRequestAnimationFrame		||
-				window.msRequestAnimationFrame		||
-				function( callback ){ //fallback to setTimeout
-					window.setTimeout(callback, 1000 / 60);
-				};
+	    if (!window.requestAnimationFrame)
+	        window.requestAnimationFrame = function(callback, element) {
+	            var currTime = new Date().getTime();
+	            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+	            var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+	              timeToCall);
+	            lastTime = currTime + timeToCall;
+	            return id;
+	        };
 
-	})();
-
+	    if (!window.cancelAnimationFrame)
+	        window.cancelAnimationFrame = function(id) {
+	            clearTimeout(id);
+	        };
+	}());
 
 // END _o.
 
