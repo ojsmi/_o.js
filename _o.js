@@ -26,7 +26,7 @@
 
 // SETUP
 	var _o = {
-		VERSION: '0.0.17',
+		VERSION: '0.0.18',
 		DEBUG : false
 	};
 
@@ -181,6 +181,12 @@ _o.vec.prototype = {
 		this.x = ( this.x > val ) ? val : this.x;
 		this.y = ( this.y > val ) ? val : this.y;
 		this.z = ( this.z > val ) ? val : this.z;
+	},
+	distanceTo: function( vect ){
+		var xD = vect.x - this.x;
+		var yD = vect.y - this.y;
+		var zD = vect.z - this.z;
+		return Math.sqrt( (xD * xD) + (yD * yD) + (zD * zD) );
 	}
 };
 
