@@ -141,6 +141,10 @@ _o.vec2D.prototype = {
 	mult: function( val ){
 		this.x *= val;
 		this.y *= val;
+	},
+	constrain: function( val ){
+		this.x = ( this.x > val ) ? val : this.x;
+		this.y = ( this.y > val ) ? val : this.y;
 	}
 };
 
@@ -172,6 +176,11 @@ _o.vec.prototype = {
 		this.x *= val;
 		this.y *= val;
 		this.z *= val;
+	},
+	constrain: function( val ){
+		this.x = ( this.x > val ) ? val : this.x;
+		this.y = ( this.y > val ) ? val : this.y;
+		this.z = ( this.z > val ) ? val : this.z;
 	}
 };
 
